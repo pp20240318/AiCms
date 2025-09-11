@@ -20,38 +20,21 @@ export const useUserStore = defineStore('user', () => {
   // 登录
   const login = async (loginData: LoginData) => {
     try {
-      // 临时模拟登录成功（因为后端API可能还没有完全对接）
-      if (loginData.username === 'admin' && loginData.password === 'admin123') {
-        const mockResponse: LoginResponse = {
-          token: 'mock-jwt-token-' + Date.now(),
-          user: {
-            id: 1,
-            username: 'admin',
-            email: 'admin@example.com',
-            roles: ['admin', 'user']
-          }
-        }
-        
-        token.value = mockResponse.token
-        userInfo.value = mockResponse.user
-        localStorage.setItem('token', mockResponse.token)
-        localStorage.setItem('userInfo', JSON.stringify(mockResponse.user))
-        ElMessage.success('登录成功')
-        return mockResponse
-      } else {
-        throw new Error('用户名或密码错误')
+      const response: LoginResponse = await apiLogin(loginData)
+      token.value = response.token
+      // 将roles合并到用户信息中以保持兼容性
+      const userWithRoles = {
+        ...response.user,
+        roles: response.roles
       }
-      
-      // 实际API调用（暂时注释）
-      // const response: LoginResponse = await apiLogin(loginData)
-      // token.value = response.token
-      // userInfo.value = response.user
-      // localStorage.setItem('token', response.token)
-      // localStorage.setItem('userInfo', JSON.stringify(response.user))
-      // ElMessage.success('登录成功')
-      // return response
-    } catch (error) {
-      ElMessage.error('登录失败')
+      userInfo.value = userWithRoles
+      localStorage.setItem('token', response.token)
+      localStorage.setItem('userInfo', JSON.stringify(userWithRoles))
+      ElMessage.success('登录成功')
+      return response
+    } catch (error: any) {
+      const errorMessage = error?.response?.data?.message || error?.message || '登录失败'
+      ElMessage.error(errorMessage)
       throw error
     }
   }

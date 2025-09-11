@@ -11,13 +11,28 @@ export interface LoginResponse {
     id: number
     username: string
     email: string
-    roles: string[]
+    realName?: string
+    phone?: string
+    isActive: boolean
+    lastLoginAt?: string
+    createdAt: string
   }
+  roles: string[]
+}
+
+interface ApiResponse<T> {
+  success: boolean
+  message: string
+  data: T
 }
 
 // 登录
-export const login = (data: LoginData): Promise<LoginResponse> => {
-  return request.post('/auth/login', data)
+export const login = async (data: LoginData): Promise<LoginResponse> => {
+  const response: ApiResponse<LoginResponse> = await request.post('/auth/login', data)
+  if (!response.success) {
+    throw new Error(response.message)
+  }
+  return response.data
 }
 
 // 退出登录
