@@ -28,11 +28,8 @@ interface ApiResponse<T> {
 
 // 登录
 export const login = async (data: LoginData): Promise<LoginResponse> => {
-  const response: ApiResponse<LoginResponse> = await request.post('/auth/login', data)
-  if (!response.success) {
-    throw new Error(response.message)
-  }
-  return response.data
+  // API 拦截器已经处理了包装格式，直接返回数据
+  return await request.post('/auth/login', data)
 }
 
 // 退出登录

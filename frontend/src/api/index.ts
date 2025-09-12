@@ -27,6 +27,16 @@ request.interceptors.request.use(
 // 响应拦截器
 request.interceptors.response.use(
   response => {
+    // 检查是否是包装的API响应格式
+    if (response.data && typeof response.data === 'object' && 'success' in response.data) {
+      if (response.data.success) {
+        return response.data.data // 返回实际数据
+      } else {
+        // API返回失败，抛出错误
+        throw new Error(response.data.message || '请求失败')
+      }
+    }
+    // 如果不是包装格式，直接返回数据
     return response.data
   },
   error => {
@@ -49,7 +59,16 @@ request.interceptors.response.use(
           ElMessage.error('服务器内部错误')
           break
         default:
-          ElMessage.error(response.data?.message || '请求失败')
+          // 处理包装的错误响应
+          let errorMessage = '请求失败'
+          if (response.data && typeof response.data === 'object') {
+            if ('message' in response.data) {
+              errorMessage = response.data.message
+            } else if ('data' in response.data && response.data.data?.message) {
+              errorMessage = response.data.data.message
+            }
+          }
+          ElMessage.error(errorMessage)
       }
     } else {
       ElMessage.error('网络连接失败')
