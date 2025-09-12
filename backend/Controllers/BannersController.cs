@@ -137,7 +137,7 @@ public class BannersController : ControllerBase
                 return NotFound(ApiResponse<object>.ErrorResult("横幅不存在"));
             }
 
-            return Ok(ApiResponse<object>.SuccessResult(null, "横幅删除成功"));
+            return Ok(ApiResponse.SuccessResult("横幅删除成功"));
         }
         catch (Exception ex)
         {
@@ -157,7 +157,7 @@ public class BannersController : ControllerBase
                 return NotFound(ApiResponse<object>.ErrorResult("横幅不存在"));
             }
 
-            return Ok(ApiResponse<object>.SuccessResult(null, "横幅状态切换成功"));
+            return Ok(ApiResponse.SuccessResult("横幅状态切换成功"));
         }
         catch (Exception ex)
         {

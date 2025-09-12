@@ -141,7 +141,7 @@ public class ProductsController : ControllerBase
                 return NotFound(ApiResponse<object>.ErrorResult("产品不存在"));
             }
 
-            return Ok(ApiResponse<object>.SuccessResult(null, "产品删除成功"));
+            return Ok(ApiResponse.SuccessResult("产品删除成功"));
         }
         catch (Exception ex)
         {
@@ -161,7 +161,7 @@ public class ProductsController : ControllerBase
                 return NotFound(ApiResponse<object>.ErrorResult("产品不存在"));
             }
 
-            return Ok(ApiResponse<object>.SuccessResult(null, "产品状态切换成功"));
+            return Ok(ApiResponse.SuccessResult("产品状态切换成功"));
         }
         catch (Exception ex)
         {
@@ -181,7 +181,7 @@ public class ProductsController : ControllerBase
                 return NotFound(ApiResponse<object>.ErrorResult("产品不存在"));
             }
 
-            return Ok(ApiResponse<object>.SuccessResult(null, "推荐状态切换成功"));
+            return Ok(ApiResponse.SuccessResult("推荐状态切换成功"));
         }
         catch (Exception ex)
         {

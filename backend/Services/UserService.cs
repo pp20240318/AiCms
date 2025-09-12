@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MyCms.Api.Data;
 using MyCms.Api.Models;
+using MyCms.Api.DTOs;
 using BCrypt.Net;
 
 namespace MyCms.Api.Services;
@@ -134,5 +135,61 @@ public class UserService : IUserService
         user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
         await _context.SaveChangesAsync();
         return true;
+    }
+
+    public async Task<PagedResult<UserDto>> GetUsersAsync(UserListRequest request)
+    {
+        var query = _context.Users
+            .Where(u => !u.IsDeleted)
+            .AsQueryable();
+
+        // 搜索过滤
+        if (!string.IsNullOrEmpty(request.Search))
+        {
+            query = query.Where(u => u.Username.Contains(request.Search) ||
+                                   u.Email.Contains(request.Search) ||
+                                   u.RealName!.Contains(request.Search));
+        }
+
+        // 状态过滤
+        if (request.IsActive.HasValue)
+        {
+            query = query.Where(u => u.IsActive == request.IsActive);
+        }
+
+        var totalCount = await query.CountAsync();
+
+        var users = await query
+            .OrderByDescending(u => u.CreatedAt)
+            .Skip((request.Page - 1) * request.PageSize)
+            .Take(request.PageSize)
+            .ToListAsync();
+
+        var userDtos = new List<UserDto>();
+        foreach (var user in users)
+        {
+            var roles = await GetUserRolesAsync(user.Id);
+            userDtos.Add(new UserDto
+            {
+                Id = user.Id,
+                Username = user.Username,
+                Email = user.Email,
+                RealName = user.RealName,
+                Phone = user.Phone,
+                IsActive = user.IsActive,
+                LastLoginAt = user.LastLoginAt,
+                CreatedAt = user.CreatedAt,
+                Roles = roles
+            });
+        }
+
+        return new PagedResult<UserDto>
+        {
+            Items = userDtos,
+            TotalCount = totalCount,
+            Page = request.Page,
+            PageSize = request.PageSize,
+            TotalPages = (int)Math.Ceiling((double)totalCount / request.PageSize)
+        };
     }
 }

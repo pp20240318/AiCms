@@ -123,7 +123,7 @@ public class ProductCategoriesController : ControllerBase
                 return NotFound(ApiResponse<object>.ErrorResult("分类不存在"));
             }
 
-            return Ok(ApiResponse<object>.SuccessResult(null, "分类删除成功"));
+            return Ok(ApiResponse.SuccessResult("分类删除成功"));
         }
         catch (Exception ex)
         {

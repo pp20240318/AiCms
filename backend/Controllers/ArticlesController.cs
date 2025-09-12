@@ -134,7 +134,7 @@ public class ArticlesController : ControllerBase
                 return NotFound(ApiResponse<object>.ErrorResult("文章不存在"));
             }
 
-            return Ok(ApiResponse<object>.SuccessResult(null, "文章删除成功"));
+            return Ok(ApiResponse.SuccessResult("文章删除成功"));
         }
         catch (Exception ex)
         {
@@ -154,7 +154,7 @@ public class ArticlesController : ControllerBase
                 return NotFound(ApiResponse<object>.ErrorResult("文章不存在"));
             }
 
-            return Ok(ApiResponse<object>.SuccessResult(null, "文章发布成功"));
+            return Ok(ApiResponse.SuccessResult("文章发布成功"));
         }
         catch (Exception ex)
         {
@@ -174,7 +174,7 @@ public class ArticlesController : ControllerBase
                 return NotFound(ApiResponse<object>.ErrorResult("文章不存在"));
             }
 
-            return Ok(ApiResponse<object>.SuccessResult(null, "文章取消发布成功"));
+            return Ok(ApiResponse.SuccessResult("文章取消发布成功"));
         }
         catch (Exception ex)
         {

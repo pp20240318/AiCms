@@ -1,4 +1,5 @@
 using MyCms.Api.Models;
+using MyCms.Api.DTOs;
 
 namespace MyCms.Api.Services;
 
@@ -13,4 +14,5 @@ public interface IUserService
     Task<User> UpdateAsync(User user);
     Task<bool> DeleteAsync(int id);
     Task<bool> ChangePasswordAsync(int userId, string currentPassword, string newPassword);
+    Task<PagedResult<UserDto>> GetUsersAsync(UserListRequest request);
 }

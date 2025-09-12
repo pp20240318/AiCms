@@ -60,7 +60,7 @@ public class FilesController : ControllerBase
                     var result = await _fileService.UploadFileAsync(file, userId);
                     results.Add(result);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     // Log error but continue with other files
                     results.Add(new UploadResponse 
@@ -161,7 +161,7 @@ public class FilesController : ControllerBase
                 return NotFound(ApiResponse<object>.ErrorResult("文件不存在"));
             }
 
-            return Ok(ApiResponse<object>.SuccessResult(null, "文件删除成功"));
+            return Ok(ApiResponse.SuccessResult("文件删除成功"));
         }
         catch (Exception ex)
         {
