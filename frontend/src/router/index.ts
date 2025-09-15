@@ -4,9 +4,47 @@ import { useUserStore } from '@/stores/user'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    // 前台路由
     {
       path: '/',
-      redirect: '/dashboard'
+      component: () => import('@/views/Frontend/Layout.vue'),
+      meta: { requiresAuth: false },
+      children: [
+        {
+          path: '',
+          redirect: '/home'
+        },
+        {
+          path: 'home',
+          name: 'FrontendHome',
+          component: () => import('@/views/Frontend/Home.vue')
+        },
+        {
+          path: 'products',
+          name: 'FrontendProducts',
+          component: () => import('@/views/Frontend/Products.vue')
+        },
+        {
+          path: 'articles',
+          name: 'FrontendArticles',
+          component: () => import('@/views/Frontend/Articles.vue')
+        },
+        {
+          path: 'about',
+          name: 'FrontendAbout',
+          component: () => import('@/views/Frontend/About.vue')
+        },
+        {
+          path: 'contact',
+          name: 'FrontendContact',
+          component: () => import('@/views/Frontend/Contact.vue')
+        }
+      ]
+    },
+    // 旧的dashboard路由重定向到新路径
+    {
+      path: '/dashboard',
+      redirect: '/admin/dashboard'
     },
     {
       path: '/login',
@@ -27,10 +65,14 @@ const router = createRouter({
       meta: { requiresAuth: false }
     },
     {
-      path: '/',
+      path: '/admin',
       component: () => import('@/views/Layout/index.vue'),
       meta: { requiresAuth: true },
       children: [
+        {
+          path: '',
+          redirect: '/admin/dashboard'
+        },
         {
           path: 'dashboard',
           name: 'Dashboard',
@@ -70,6 +112,21 @@ const router = createRouter({
           path: 'banners',
           name: 'Banners',
           component: () => import('@/views/Banners/index.vue')
+        },
+        {
+          path: 'seo',
+          name: 'SeoSettings',
+          component: () => import('@/views/Seo/index.vue')
+        },
+        {
+          path: 'contacts',
+          name: 'Contacts',
+          component: () => import('@/views/Contacts/index.vue')
+        },
+        {
+          path: 'pages',
+          name: 'Pages',
+          component: () => import('@/views/Pages/index.vue')
         }
       ]
     }
@@ -79,7 +136,7 @@ const router = createRouter({
 // 路由守卫
 router.beforeEach((to, from, next) => {
   const userStore = useUserStore()
-  
+
   // 检查路由是否需要认证
   if (to.meta.requiresAuth !== false) {
     // 如果用户未登录，跳转到登录页
@@ -88,13 +145,13 @@ router.beforeEach((to, from, next) => {
       return
     }
   } else {
-    // 如果是登录页且用户已登录，跳转到仪表盘
+    // 如果是登录页且用户已登录，跳转到管理后台
     if (to.path === '/login' && userStore.isLoggedIn) {
-      next('/dashboard')
+      next('/admin/dashboard')
       return
     }
   }
-  
+
   next()
 })
 

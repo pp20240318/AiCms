@@ -22,6 +22,12 @@ public class CmsDbContext : DbContext
     public DbSet<Banner> Banners { get; set; }
     public DbSet<UploadedFile> UploadedFiles { get; set; }
     public DbSet<ScheduledTask> ScheduledTasks { get; set; }
+
+    // 新增的实体
+    public DbSet<SeoSetting> SeoSettings { get; set; }
+    public DbSet<Contact> Contacts { get; set; }
+    public DbSet<Page> Pages { get; set; }
+    public DbSet<WebsiteConfig> WebsiteConfigs { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -115,7 +121,29 @@ public class CmsDbContext : DbContext
         modelBuilder.Entity<Permission>()
             .HasIndex(p => p.Code)
             .IsUnique();
-        
+
+        // Configure Page self-referencing relationship
+        modelBuilder.Entity<Page>()
+            .HasOne<Page>()
+            .WithMany()
+            .HasForeignKey(p => p.ParentId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        // Configure SeoSetting unique constraints
+        modelBuilder.Entity<SeoSetting>()
+            .HasIndex(s => s.PagePath)
+            .IsUnique();
+
+        // Configure WebsiteConfig unique constraints
+        modelBuilder.Entity<WebsiteConfig>()
+            .HasIndex(w => w.Key)
+            .IsUnique();
+
+        // Configure Page unique constraints
+        modelBuilder.Entity<Page>()
+            .HasIndex(p => p.Slug)
+            .IsUnique();
+
         base.OnModelCreating(modelBuilder);
     }
     

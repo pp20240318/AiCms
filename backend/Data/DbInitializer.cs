@@ -112,7 +112,30 @@ public static class DbInitializer
         };
         
         await context.Menus.AddRangeAsync(menus);
-        
+
+        // 添加默认网站配置
+        await InitializeWebsiteConfigsAsync(context);
+
         await context.SaveChangesAsync();
+    }
+
+    private static async Task InitializeWebsiteConfigsAsync(CmsDbContext context)
+    {
+        if (context.WebsiteConfigs.Any())
+            return;
+
+        var defaultConfigs = new List<WebsiteConfig>
+        {
+            new() { Key = WebsiteConfigKeys.SiteName, Value = "My CMS Website", Description = "网站名称", Group = "basic", DataType = "string", IsPublic = true, SortOrder = 1 },
+            new() { Key = WebsiteConfigKeys.SiteDescription, Value = "A modern CMS website", Description = "网站描述", Group = "basic", DataType = "string", IsPublic = true, SortOrder = 2 },
+            new() { Key = WebsiteConfigKeys.SiteKeywords, Value = "cms,website,management", Description = "网站关键词", Group = "seo", DataType = "string", IsPublic = true, SortOrder = 1 },
+            new() { Key = WebsiteConfigKeys.ContactEmail, Value = "contact@example.com", Description = "联系邮箱", Group = "contact", DataType = "email", IsPublic = true, SortOrder = 1 },
+            new() { Key = WebsiteConfigKeys.ContactPhone, Value = "", Description = "联系电话", Group = "contact", DataType = "string", IsPublic = true, SortOrder = 2 },
+            new() { Key = WebsiteConfigKeys.ContactAddress, Value = "", Description = "联系地址", Group = "contact", DataType = "string", IsPublic = true, SortOrder = 3 },
+            new() { Key = WebsiteConfigKeys.EnableContact, Value = "true", Description = "启用联系我们功能", Group = "features", DataType = "boolean", IsPublic = false, SortOrder = 1 },
+            new() { Key = WebsiteConfigKeys.EnableComments, Value = "false", Description = "启用评论功能", Group = "features", DataType = "boolean", IsPublic = false, SortOrder = 2 }
+        };
+
+        await context.WebsiteConfigs.AddRangeAsync(defaultConfigs);
     }
 }

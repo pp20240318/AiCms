@@ -11,53 +11,72 @@
       :collapse="collapsed"
       :router="true"
     >
-      <el-menu-item index="/dashboard">
+      <el-menu-item index="/admin/dashboard">
         <el-icon><HomeFilled /></el-icon>
         <template #title>仪表盘</template>
       </el-menu-item>
-      
+
       <el-sub-menu index="content">
         <template #title>
           <el-icon><Document /></el-icon>
           <span>内容管理</span>
         </template>
-        <el-menu-item index="/articles">
+        <el-menu-item index="/admin/articles">
           <el-icon><DocumentCopy /></el-icon>
           <template #title>文章管理</template>
         </el-menu-item>
-        <el-menu-item index="/products">
+        <el-menu-item index="/admin/products">
           <el-icon><ShoppingBag /></el-icon>
           <template #title>产品管理</template>
         </el-menu-item>
-        <el-menu-item index="/categories">
+        <el-menu-item index="/admin/categories">
           <el-icon><FolderOpened /></el-icon>
           <template #title>分类管理</template>
         </el-menu-item>
       </el-sub-menu>
-      
+
       <el-sub-menu index="system">
         <template #title>
           <el-icon><Setting /></el-icon>
           <span>系统管理</span>
         </template>
-        <el-menu-item index="/users">
+        <el-menu-item index="/admin/users">
           <el-icon><User /></el-icon>
           <template #title>用户管理</template>
         </el-menu-item>
-        <el-menu-item index="/roles">
+        <el-menu-item index="/admin/roles">
           <el-icon><UserFilled /></el-icon>
           <template #title>角色管理</template>
         </el-menu-item>
-        <el-menu-item index="/menus">
+        <el-menu-item index="/admin/menus">
           <el-icon><Menu /></el-icon>
           <template #title>菜单管理</template>
         </el-menu-item>
       </el-sub-menu>
-      
-      <el-menu-item index="/banners">
+
+      <el-menu-item index="/admin/banners">
         <el-icon><PictureFilled /></el-icon>
         <template #title>轮播图管理</template>
       </el-menu-item>
+
+      <el-sub-menu index="website">
+        <template #title>
+          <el-icon><Monitor /></el-icon>
+          <span>网站管理</span>
+        </template>
+        <el-menu-item index="/admin/seo">
+          <el-icon><Search /></el-icon>
+          <template #title>SEO设置</template>
+        </el-menu-item>
+        <el-menu-item index="/admin/contacts">
+          <el-icon><Message /></el-icon>
+          <template #title>联系我们</template>
+        </el-menu-item>
+        <el-menu-item index="/admin/pages">
+          <el-icon><Document /></el-icon>
+          <template #title>页面管理</template>
+        </el-menu-item>
+      </el-sub-menu>
     </el-menu>
   </el-aside>
 </template>
@@ -76,7 +95,10 @@ import {
   User,
   UserFilled,
   Menu,
-  PictureFilled
+  PictureFilled,
+  Monitor,
+  Search,
+  Message
 } from '@element-plus/icons-vue'
 
 const route = useRoute()

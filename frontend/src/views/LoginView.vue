@@ -99,15 +99,15 @@ const handleLogin = async () => {
     // 使用 nextTick 确保状态更新后再跳转
     await new Promise(resolve => setTimeout(resolve, 100))
 
-    // 跳转到主仪表盘
+    // 跳转到管理后台
     try {
-      await router.push('/dashboard')
-      console.log('登录成功，已跳转到主仪表盘')
+      await router.push('/admin/dashboard')
+      console.log('登录成功，已跳转到管理后台')
     } catch (routerError) {
       console.error('Vue Router跳转失败:', routerError)
       // 如果Vue Router失败，使用原生跳转
       console.log('使用原生跳转...')
-      window.location.href = '/dashboard'
+      window.location.href = '/admin/dashboard'
     }
   } catch (error) {
     console.error('登录失败:', error)
