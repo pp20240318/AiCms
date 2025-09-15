@@ -98,16 +98,16 @@ const handleLogin = async () => {
     
     // 使用 nextTick 确保状态更新后再跳转
     await new Promise(resolve => setTimeout(resolve, 100))
-    
-    // 先尝试跳转到简化仪表盘测试
+
+    // 跳转到主仪表盘
     try {
-      await router.push('/simple-dashboard')
-      console.log('Vue Router跳转到简化仪表盘完成')
+      await router.push('/dashboard')
+      console.log('登录成功，已跳转到主仪表盘')
     } catch (routerError) {
       console.error('Vue Router跳转失败:', routerError)
       // 如果Vue Router失败，使用原生跳转
       console.log('使用原生跳转...')
-      window.location.href = '/simple-dashboard'
+      window.location.href = '/dashboard'
     }
   } catch (error) {
     console.error('登录失败:', error)
