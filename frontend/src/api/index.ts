@@ -5,7 +5,7 @@ import router from '@/router'
 
 // 创建axios实例
 const request = axios.create({
-  baseURL: 'http://localhost:5001/api',
+  baseURL: 'http://localhost:5012/api',
   timeout: 10000
 })
 

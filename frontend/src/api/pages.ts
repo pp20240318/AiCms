@@ -1,4 +1,4 @@
-import { request } from './index'
+import request from './index'
 
 export interface Page {
   id: number
@@ -101,35 +101,35 @@ export interface PageListResponse {
 
 // 获取已发布的页面（公开接口）
 export const getPublicPages = () => {
-  return request.get<PublicPage[]>('/api/pages/public')
+  return request.get<PublicPage[]>('/pages/public')
 }
 
 // 根据Slug获取已发布的页面（公开接口）
 export const getPublicPageBySlug = (slug: string) => {
-  return request.get<PublicPage>(`/api/pages/public/${slug}`)
+  return request.get<PublicPage>(`/pages/public/${slug}`)
 }
 
 // 获取所有页面（管理员）
 export const getPages = (params?: PageQueryDto) => {
-  return request.get<PageListResponse>('/api/pages', { params })
+  return request.get<PageListResponse>('/pages', { params })
 }
 
 // 获取指定页面
 export const getPage = (id: number) => {
-  return request.get<Page>(`/api/pages/${id}`)
+  return request.get<Page>(`/pages/${id}`)
 }
 
 // 创建页面
 export const createPage = (data: CreatePageDto) => {
-  return request.post<Page>('/api/pages', data)
+  return request.post<Page>('/pages', data)
 }
 
 // 更新页面
 export const updatePage = (id: number, data: UpdatePageDto) => {
-  return request.put(`/api/pages/${id}`, data)
+  return request.put(`/pages/${id}`, data)
 }
 
 // 删除页面
 export const deletePage = (id: number) => {
-  return request.delete(`/api/pages/${id}`)
+  return request.delete(`/pages/${id}`)
 }

@@ -1,4 +1,4 @@
-import { request } from './index'
+import request from './index'
 
 export interface Contact {
   id: number
@@ -69,30 +69,30 @@ export interface ContactStatistics {
 
 // 提交联系我们表单（公开接口）
 export const submitContact = (data: CreateContactDto) => {
-  return request.post<Contact>('/api/contacts', data)
+  return request.post<Contact>('/contacts', data)
 }
 
 // 获取联系消息列表（管理员）
 export const getContacts = (params?: ContactQueryDto) => {
-  return request.get<ContactListResponse>('/api/contacts', { params })
+  return request.get<ContactListResponse>('/contacts', { params })
 }
 
 // 获取指定联系消息
 export const getContact = (id: number) => {
-  return request.get<Contact>(`/api/contacts/${id}`)
+  return request.get<Contact>(`/contacts/${id}`)
 }
 
 // 更新联系消息状态和回复
 export const updateContactStatus = (id: number, data: UpdateContactStatusDto) => {
-  return request.put(`/api/contacts/${id}/status`, data)
+  return request.put(`/contacts/${id}/status`, data)
 }
 
 // 删除联系消息
 export const deleteContact = (id: number) => {
-  return request.delete(`/api/contacts/${id}`)
+  return request.delete(`/contacts/${id}`)
 }
 
 // 获取联系消息统计
 export const getContactStatistics = () => {
-  return request.get<ContactStatistics>('/api/contacts/statistics')
+  return request.get<ContactStatistics>('/contacts/statistics')
 }
