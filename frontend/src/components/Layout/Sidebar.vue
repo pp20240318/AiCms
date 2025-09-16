@@ -29,9 +29,13 @@
           <el-icon><ShoppingBag /></el-icon>
           <template #title>产品管理</template>
         </el-menu-item>
-        <el-menu-item index="/admin/categories">
+        <el-menu-item index="/admin/article-categories">
           <el-icon><FolderOpened /></el-icon>
-          <template #title>分类管理</template>
+          <template #title>文章分类</template>
+        </el-menu-item>
+        <el-menu-item index="/admin/product-categories">
+          <el-icon><FolderOpened /></el-icon>
+          <template #title>产品分类</template>
         </el-menu-item>
       </el-sub-menu>
 

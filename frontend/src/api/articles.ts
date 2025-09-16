@@ -4,36 +4,53 @@ export interface Article {
   id: number
   title: string
   content: string
-  summary: string
+  excerpt: string
   author: string
   categoryId: number
   categoryName: string
   status: 'draft' | 'published' | 'archived'
   featuredImage: string
-  tags: string[]
+  tags: string
   viewCount: number
   createdAt: string
   updatedAt: string
+  metaTitle?: string
+  metaDescription?: string
 }
 
-export interface CreateArticleData {
+export interface CreateArticleDto {
   title: string
   content: string
-  summary: string
+  excerpt: string
   categoryId: number
   status: 'draft' | 'published'
   featuredImage?: string
-  tags: string[]
+  tags: string
+  metaTitle?: string
+  metaDescription?: string
 }
 
-export interface UpdateArticleData {
-  title?: string
-  content?: string
-  summary?: string
-  categoryId?: number
-  status?: 'draft' | 'published' | 'archived'
+export interface UpdateArticleDto {
+  title: string
+  content: string
+  excerpt: string
+  categoryId: number
+  status: 'draft' | 'published' | 'archived'
   featuredImage?: string
-  tags?: string[]
+  tags: string
+  metaTitle?: string
+  metaDescription?: string
+}
+
+export interface ArticleCategory {
+  id: number
+  name: string
+  description?: string
+  parentId?: number
+  sortOrder: number
+  isActive: boolean
+  createdAt: string
+  updatedAt?: string
 }
 
 export interface ArticlesQuery {
@@ -61,13 +78,23 @@ export const getArticleById = (id: number): Promise<Article> => {
 }
 
 // 创建文章
-export const createArticle = (data: CreateArticleData): Promise<Article> => {
+export const createArticle = (data: CreateArticleDto): Promise<Article> => {
   return request.post('/articles', data)
 }
 
 // 更新文章
-export const updateArticle = (id: number, data: UpdateArticleData): Promise<Article> => {
+export const updateArticle = (id: number, data: UpdateArticleDto): Promise<Article> => {
   return request.put(`/articles/${id}`, data)
+}
+
+// 获取单个文章 (别名函数，与组件中的调用保持一致)
+export const getArticle = (id: number): Promise<Article> => {
+  return getArticleById(id)
+}
+
+// 获取文章分类列表
+export const getCategories = (): Promise<ArticleCategory[]> => {
+  return request.get('/categories')
 }
 
 // 删除文章

@@ -58,7 +58,9 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IArticleService, ArticleService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IArticleCategoryService, ArticleCategoryService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IProductCategoryService, ProductCategoryService>();
 builder.Services.AddScoped<IBannerService, BannerService>();
 builder.Services.AddScoped<IFileService, FileService>();
 
@@ -86,7 +88,19 @@ app.MapControllers();
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<CmsDbContext>();
-    await DbInitializer.InitializeAsync(context);
+    try
+    {
+        // Apply any pending migrations
+        await context.Database.MigrateAsync();
+        await DbInitializer.InitializeAsync(context);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Database migration error: {ex.Message}");
+        // If migration fails, try EnsureCreated as fallback
+        await context.Database.EnsureCreatedAsync();
+        await DbInitializer.InitializeAsync(context);
+    }
 }
 
 app.Run();

@@ -94,14 +94,29 @@ const router = createRouter({
           component: () => import('@/views/Articles/index.vue')
         },
         {
+          path: 'articles/create',
+          name: 'ArticleCreate',
+          component: () => import('@/views/Articles/Create.vue')
+        },
+        {
+          path: 'articles/:id/edit',
+          name: 'ArticleEdit',
+          component: () => import('@/views/Articles/Edit.vue')
+        },
+        {
           path: 'products',
           name: 'Products',
           component: () => import('@/views/Products/index.vue')
         },
         {
-          path: 'categories',
-          name: 'Categories',
-          component: () => import('@/views/Categories/index.vue')
+          path: 'article-categories',
+          name: 'ArticleCategories',
+          component: () => import('@/views/ArticleCategories/index.vue')
+        },
+        {
+          path: 'product-categories',
+          name: 'ProductCategories',
+          component: () => import('@/views/ProductCategories/index.vue')
         },
         {
           path: 'menus',
@@ -127,6 +142,10 @@ const router = createRouter({
           path: 'pages',
           name: 'Pages',
           component: () => import('@/views/Pages/index.vue')
+        },
+        {
+          path: 'categories',
+          redirect: '/admin/article-categories'
         }
       ]
     }

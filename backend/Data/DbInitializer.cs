@@ -1,4 +1,5 @@
 using MyCms.Api.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace MyCms.Api.Data;
 
@@ -8,7 +9,71 @@ public static class DbInitializer
     {
         // Ensure database is created
         await context.Database.EnsureCreatedAsync();
-        
+
+        // Always ensure critical tables exist
+        try
+        {
+            await context.Database.ExecuteSqlRawAsync(@"
+                CREATE TABLE IF NOT EXISTS Contacts (
+                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Name TEXT NOT NULL,
+                    Email TEXT NOT NULL,
+                    Phone TEXT NULL,
+                    Company TEXT NULL,
+                    Subject TEXT NOT NULL,
+                    Message TEXT NOT NULL,
+                    Status INTEGER NOT NULL DEFAULT 0,
+                    Reply TEXT NULL,
+                    RepliedAt TEXT NULL,
+                    RepliedById INTEGER NULL,
+                    IpAddress TEXT NULL,
+                    UserAgent TEXT NULL,
+                    CreatedAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    UpdatedAt TEXT NULL,
+                    IsDeleted INTEGER NOT NULL DEFAULT 0
+                )");
+
+            await context.Database.ExecuteSqlRawAsync(@"
+                CREATE TABLE IF NOT EXISTS Pages (
+                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Title TEXT NOT NULL,
+                    Slug TEXT NOT NULL,
+                    Content TEXT NOT NULL,
+                    Excerpt TEXT NULL,
+                    MetaTitle TEXT NULL,
+                    MetaDescription TEXT NULL,
+                    MetaKeywords TEXT NULL,
+                    FeaturedImage TEXT NULL,
+                    Status INTEGER NOT NULL DEFAULT 1,
+                    SortOrder INTEGER NOT NULL DEFAULT 0,
+                    Template TEXT NULL,
+                    CreatedAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    UpdatedAt TEXT NULL,
+                    CreatedById INTEGER NOT NULL,
+                    UpdatedById INTEGER NULL,
+                    IsDeleted INTEGER NOT NULL DEFAULT 0
+                )");
+
+            await context.Database.ExecuteSqlRawAsync(@"
+                CREATE TABLE IF NOT EXISTS WebsiteConfigs (
+                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    [Key] TEXT NOT NULL UNIQUE,
+                    Value TEXT NULL,
+                    Description TEXT NULL,
+                    [Group] TEXT NOT NULL,
+                    DataType TEXT NOT NULL,
+                    IsPublic INTEGER NOT NULL DEFAULT 1,
+                    SortOrder INTEGER NOT NULL DEFAULT 0,
+                    CreatedAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    UpdatedAt TEXT NULL,
+                    IsDeleted INTEGER NOT NULL DEFAULT 0
+                )");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error creating tables: {ex.Message}");
+        }
+
         // Check if any users exist
         if (context.Users.Any())
             return; // Database has been seeded

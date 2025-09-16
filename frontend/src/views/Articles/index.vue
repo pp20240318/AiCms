@@ -2,7 +2,7 @@
   <div class="articles">
     <div class="page-header">
       <h1>文章管理</h1>
-      <el-button type="primary" @click="$router.push('/articles/create')">
+      <el-button type="primary" @click="$router.push('/admin/articles/create')">
         <el-icon><Plus /></el-icon>
         新增文章
       </el-button>
@@ -61,7 +61,7 @@
         </el-table-column>
         <el-table-column label="操作" width="200">
           <template #default="{ row }">
-            <el-button size="small" @click="$router.push(`/articles/${row.id}/edit`)">编辑</el-button>
+            <el-button size="small" @click="$router.push(`/admin/articles/${row.id}/edit`)">编辑</el-button>
             <el-button 
               size="small" 
               :type="row.status === 'published' ? 'warning' : 'success'"
