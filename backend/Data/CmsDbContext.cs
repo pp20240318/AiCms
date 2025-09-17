@@ -28,6 +28,7 @@ public class CmsDbContext : DbContext
     public DbSet<Contact> Contacts { get; set; }
     public DbSet<Page> Pages { get; set; }
     public DbSet<WebsiteConfig> WebsiteConfigs { get; set; }
+    public DbSet<Member> Members { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -142,6 +143,11 @@ public class CmsDbContext : DbContext
         // Configure Page unique constraints
         modelBuilder.Entity<Page>()
             .HasIndex(p => p.Slug)
+            .IsUnique();
+
+        // Configure Member unique constraints
+        modelBuilder.Entity<Member>()
+            .HasIndex(m => m.MemberCode)
             .IsUnique();
 
         base.OnModelCreating(modelBuilder);

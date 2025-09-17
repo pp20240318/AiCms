@@ -52,6 +52,10 @@
           <el-icon><UserFilled /></el-icon>
           <template #title>角色管理</template>
         </el-menu-item>
+        <el-menu-item index="/admin/members">
+          <el-icon><Wallet /></el-icon>
+          <template #title>会员管理</template>
+        </el-menu-item>
         <el-menu-item index="/admin/menus">
           <el-icon><Menu /></el-icon>
           <template #title>菜单管理</template>
@@ -102,7 +106,8 @@ import {
   PictureFilled,
   Monitor,
   Search,
-  Message
+  Message,
+  Wallet
 } from '@element-plus/icons-vue'
 
 const route = useRoute()
