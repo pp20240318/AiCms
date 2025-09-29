@@ -123,3 +123,6 @@ package-lock.json
 
 # Application-specific
 nul
+
+cms.db-shm
+cms.db-wal

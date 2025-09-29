@@ -46,11 +46,10 @@
             </el-form-item>
 
             <el-form-item label="文章内容" prop="content">
-              <el-input
+              <RichEditor
                 v-model="articleForm.content"
-                type="textarea"
-                :rows="15"
                 placeholder="请输入文章内容"
+                height="500px"
               />
             </el-form-item>
           </el-col>
@@ -151,6 +150,7 @@ import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
 import { getArticle, updateArticle as updateArticleApi, getCategories } from '@/api/articles'
 import type { UpdateArticleDto, ArticleCategory } from '@/api/articles'
 import dayjs from 'dayjs'
+import RichEditor from '@/components/RichEditor.vue'
 
 const router = useRouter()
 const route = useRoute()

@@ -198,11 +198,10 @@
         </el-form-item>
 
         <el-form-item label="页面内容" prop="content">
-          <el-input
-            type="textarea"
+          <RichEditor
             v-model="formData.content"
-            :rows="10"
             placeholder="页面内容，支持HTML"
+            height="400px"
           />
         </el-form-item>
 
@@ -283,6 +282,7 @@ import {
   PageStatus,
   PageStatusLabels
 } from '@/api/pages'
+import RichEditor from '@/components/RichEditor.vue'
 
 const loading = ref(false)
 const submitting = ref(false)
