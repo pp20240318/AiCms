@@ -17,17 +17,53 @@
         <el-table-column prop="id" label="ID" width="80" />
         <el-table-column prop="name" label="角色名称" />
         <el-table-column prop="description" label="描述" />
-        <el-table-column label="权限">
+        <el-table-column label="权限" min-width="300">
           <template #default="{ row }">
-            <el-tag
-              v-for="permission in row.permissions"
-              :key="permission.id"
-              type="info"
-              size="small"
-              style="margin-right: 4px; margin-bottom: 4px;"
-            >
-              {{ permission.name }}
-            </el-tag>
+            <div class="permissions-display">
+              <el-tag
+                v-for="(permission, index) in row.permissions.slice(0, 3)"
+                :key="permission.id"
+                type="info"
+                size="small"
+                class="permission-tag"
+              >
+                {{ getPermissionDisplayName(permission.name) }}
+              </el-tag>
+              <el-popover
+                v-if="row.permissions.length > 3"
+                placement="top"
+                :width="400"
+                trigger="hover"
+              >
+                <template #reference>
+                  <el-tag type="info" size="small" class="permission-tag more-tag">
+                    +{{ row.permissions.length - 3 }}个权限
+                  </el-tag>
+                </template>
+                <div class="permission-popover">
+                  <div class="permission-groups-display">
+                    <div 
+                      v-for="(group, groupName) in groupPermissionsByModule(row.permissions)"
+                      :key="groupName"
+                      class="permission-group-display"
+                    >
+                      <div class="group-name">{{ groupName }}</div>
+                      <div class="group-permissions">
+                        <el-tag
+                          v-for="permission in group"
+                          :key="permission.id"
+                          size="small"
+                          type="success"
+                          class="permission-tag-small"
+                        >
+                          {{ getPermissionDisplayName(permission.name) }}
+                        </el-tag>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </el-popover>
+            </div>
           </template>
         </el-table-column>
         <el-table-column prop="createdAt" label="创建时间">
@@ -48,7 +84,8 @@
     <el-dialog
       v-model="dialogVisible"
       :title="editingRole ? '编辑角色' : '新增角色'"
-      width="600px"
+      width="900px"
+      top="5vh"
     >
       <el-form
         ref="formRef"
@@ -67,17 +104,16 @@
             placeholder="请输入角色描述"
           />
         </el-form-item>
-        <el-form-item label="权限" prop="permissionIds">
-          <div class="permissions-grid">
-            <el-checkbox
-              v-for="permission in permissions"
-              :key="permission.id"
-              :label="permission.id"
-              v-model="roleForm.permissionIds"
-            >
-              {{ permission.name }}
-              <span class="permission-desc">{{ permission.description }}</span>
-            </el-checkbox>
+        <el-form-item label="权限" prop="permissionCodes">
+          <div class="permission-selector-container">
+            <div class="selector-header">
+              <span class="selector-title">菜单权限</span>
+            </div>
+            
+            <MenuPermissionSelector
+              :menus="systemMenus"
+              v-model="roleForm.permissionCodes"
+            />
           </div>
         </el-form-item>
       </el-form>
@@ -93,17 +129,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, reactive } from 'vue'
+import { ref, onMounted, reactive, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
 import { getRoles, createRole, updateRole, deleteRole as deleteRoleApi, getPermissions } from '@/api/roles'
 import type { Role, Permission, CreateRoleData, UpdateRoleData } from '@/api/roles'
+import MenuPermissionSelector from '@/components/MenuPermissionSelector.vue'
+import { getAllSystemMenus } from '@/api/menus'
 import dayjs from 'dayjs'
 
 const loading = ref(false)
 const saving = ref(false)
 const roles = ref<Role[]>([])
 const permissions = ref<Permission[]>([])
+const systemMenus = ref<any[]>([])
 
 const dialogVisible = ref(false)
 const editingRole = ref<Role | null>(null)
@@ -111,7 +150,7 @@ const formRef = ref()
 const roleForm = reactive({
   name: '',
   description: '',
-  permissionIds: [] as number[]
+  permissionCodes: [] as string[]
 })
 
 const formRules = {
@@ -122,13 +161,67 @@ const formRules = {
   description: [
     { required: true, message: '请输入角色描述', trigger: 'blur' }
   ],
-  permissionIds: [
+  permissionCodes: [
     { required: true, message: '请选择权限', trigger: 'change' }
   ]
 }
 
 const formatDate = (date: string) => {
   return dayjs(date).format('YYYY-MM-DD HH:mm:ss')
+}
+
+// 获取权限显示名称（去掉模块前缀）
+const getPermissionDisplayName = (permissionName: string) => {
+  const parts = permissionName.split(':')
+  if (parts.length > 1) {
+    const action = parts[1]
+    const actionNames: Record<string, string> = {
+      view: '查看',
+      list: '列表',
+      create: '创建',
+      edit: '编辑',
+      update: '更新',
+      delete: '删除',
+      manage: '管理'
+    }
+    return actionNames[action] || action
+  }
+  return permissionName
+}
+
+// 按模块分组权限（用于表格展示）
+const groupPermissionsByModule = (rolePermissions: Permission[] = []) => {
+  const groups: Record<string, Permission[]> = {}
+  rolePermissions.forEach(permission => {
+    if (!permission?.name) return
+    const prefix = permission.name.split(':')[0] || '其他'
+    const groupName = getGroupDisplayName(prefix)
+    if (!groups[groupName]) {
+      groups[groupName] = []
+    }
+    groups[groupName].push(permission)
+  })
+  return groups
+}
+
+const getGroupDisplayName = (prefix: string): string => {
+  const groupNames: Record<string, string> = {
+    dashboard: '仪表盘',
+    users: '用户管理',
+    roles: '角色管理',
+    articles: '文章管理',
+    products: '产品管理',
+    categories: '分类管理',
+    banners: '轮播图管理',
+    pages: '页面管理',
+    files: '文件管理',
+    seo: 'SEO设置',
+    contacts: '联系我们',
+    members: '会员管理',
+    menus: '菜单管理',
+    system: '系统设置'
+  }
+  return groupNames[prefix] || prefix
 }
 
 const loadRoles = async () => {
@@ -160,18 +253,28 @@ const showEditDialog = (role: Role) => {
   editingRole.value = role
   roleForm.name = role.name
   roleForm.description = role.description
-  roleForm.permissionIds = role.permissions.map(p => p.id)
+  roleForm.permissionCodes = role.permissions?.map(p => p.name) || []
   dialogVisible.value = true
 }
 
 const resetForm = () => {
   roleForm.name = ''
   roleForm.description = ''
-  roleForm.permissionIds = []
+  roleForm.permissionCodes = []
   if (formRef.value) {
     formRef.value.clearValidate()
   }
 }
+
+const permissionCodeToId = computed(() => {
+  const map = new Map<string, number>()
+  permissions.value.forEach(permission => {
+    if (permission.name && permission.id) {
+      map.set(permission.name, permission.id)
+    }
+  })
+  return map
+})
 
 const saveRole = async () => {
   if (!formRef.value) return
@@ -179,12 +282,19 @@ const saveRole = async () => {
   try {
     await formRef.value.validate()
     saving.value = true
+    const selectedPermissionIds = roleForm.permissionCodes
+      .map(code => permissionCodeToId.value.get(code))
+      .filter((id): id is number => typeof id === 'number')
+    if (selectedPermissionIds.length === 0) {
+      ElMessage.error('请选择有效的权限')
+      return
+    }
     
     if (editingRole.value) {
       const updateData: UpdateRoleData = {
         name: roleForm.name,
         description: roleForm.description,
-        permissionIds: roleForm.permissionIds
+        permissionIds: selectedPermissionIds
       }
       await updateRole(editingRole.value.id, updateData)
       ElMessage.success('更新角色成功')
@@ -192,7 +302,7 @@ const saveRole = async () => {
       const createData: CreateRoleData = {
         name: roleForm.name,
         description: roleForm.description,
-        permissionIds: roleForm.permissionIds
+        permissionIds: selectedPermissionIds
       }
       await createRole(createData)
       ElMessage.success('创建角色成功')
@@ -229,9 +339,15 @@ const deleteRole = async (role: Role) => {
   }
 }
 
+// 加载系统菜单
+const loadSystemMenus = () => {
+  systemMenus.value = getAllSystemMenus()
+}
+
 onMounted(() => {
   loadRoles()
   loadPermissions()
+  loadSystemMenus()
 })
 </script>
 
@@ -253,31 +369,21 @@ onMounted(() => {
   color: #303133;
 }
 
-.permissions-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 12px;
-  max-height: 300px;
-  overflow-y: auto;
-  padding: 8px;
+.permission-selector-container {
   border: 1px solid #dcdfe6;
   border-radius: 4px;
+  overflow: hidden;
 }
 
-.permission-desc {
-  display: block;
-  font-size: 12px;
-  color: #909399;
-  margin-top: 4px;
+.selector-header {
+  padding: 12px 16px;
+  background: #fafafa;
+  border-bottom: 1px solid #ebeef5;
 }
 
-:deep(.el-checkbox) {
-  display: block;
-  margin: 0;
+.selector-title {
+  font-weight: 500;
+  color: #303133;
 }
 
-:deep(.el-checkbox__label) {
-  white-space: normal;
-  line-height: 1.4;
-}
 </style>

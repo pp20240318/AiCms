@@ -11,110 +11,44 @@
       :collapse="collapsed"
       :router="true"
     >
-      <el-menu-item index="/admin/dashboard">
-        <el-icon><HomeFilled /></el-icon>
-        <template #title>仪表盘</template>
-      </el-menu-item>
-
-      <el-sub-menu index="content">
-        <template #title>
-          <el-icon><Document /></el-icon>
-          <span>内容管理</span>
-        </template>
-        <el-menu-item index="/admin/articles">
-          <el-icon><DocumentCopy /></el-icon>
-          <template #title>文章管理</template>
-        </el-menu-item>
-        <el-menu-item index="/admin/products">
-          <el-icon><ShoppingBag /></el-icon>
-          <template #title>产品管理</template>
-        </el-menu-item>
-        <el-menu-item index="/admin/article-categories">
-          <el-icon><FolderOpened /></el-icon>
-          <template #title>文章分类</template>
-        </el-menu-item>
-        <el-menu-item index="/admin/product-categories">
-          <el-icon><FolderOpened /></el-icon>
-          <template #title>产品分类</template>
-        </el-menu-item>
-      </el-sub-menu>
-
-      <el-sub-menu index="system">
-        <template #title>
-          <el-icon><Setting /></el-icon>
-          <span>系统管理</span>
-        </template>
-        <el-menu-item index="/admin/users">
-          <el-icon><User /></el-icon>
-          <template #title>用户管理</template>
-        </el-menu-item>
-        <el-menu-item index="/admin/roles">
-          <el-icon><UserFilled /></el-icon>
-          <template #title>角色管理</template>
-        </el-menu-item>
-        <el-menu-item index="/admin/members">
-          <el-icon><Wallet /></el-icon>
-          <template #title>会员管理</template>
-        </el-menu-item>
-        <el-menu-item index="/admin/menus">
-          <el-icon><Menu /></el-icon>
-          <template #title>菜单管理</template>
-        </el-menu-item>
-      </el-sub-menu>
-
-      <el-menu-item index="/admin/banners">
-        <el-icon><PictureFilled /></el-icon>
-        <template #title>轮播图管理</template>
-      </el-menu-item>
-
-      <el-sub-menu index="website">
-        <template #title>
-          <el-icon><Monitor /></el-icon>
-          <span>网站管理</span>
-        </template>
-        <el-menu-item index="/admin/seo">
-          <el-icon><Search /></el-icon>
-          <template #title>SEO设置</template>
-        </el-menu-item>
-        <el-menu-item index="/admin/contacts">
-          <el-icon><Message /></el-icon>
-          <template #title>联系我们</template>
-        </el-menu-item>
-        <el-menu-item index="/admin/pages">
-          <el-icon><Document /></el-icon>
-          <template #title>页面管理</template>
-        </el-menu-item>
-      </el-sub-menu>
+      <!-- 递归渲染菜单 -->
+      <template v-for="menu in visibleMenus" :key="menu.id">
+        <sidebar-menu-item :menu="menu" />
+      </template>
     </el-menu>
   </el-aside>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAppStore } from '@/stores/app'
-import {
-  HomeFilled,
-  Document,
-  DocumentCopy,
-  ShoppingBag,
-  FolderOpened,
-  Setting,
-  User,
-  UserFilled,
-  Menu,
-  PictureFilled,
-  Monitor,
-  Search,
-  Message,
-  Wallet
-} from '@element-plus/icons-vue'
+import { getAllSystemMenus, type Menu } from '@/api/menus'
+import { filterMenusByPermission } from '@/utils/permission'
+import SidebarMenuItem from './SidebarMenuItem.vue'
 
 const route = useRoute()
 const appStore = useAppStore()
 
 const collapsed = computed(() => appStore.collapsed)
 const currentRoute = computed(() => route.path)
+const menus = ref<Menu[]>([])
+
+// 获取可见的菜单（基于权限过滤）
+const visibleMenus = computed(() => filterMenusByPermission(menus.value))
+
+// 加载菜单数据
+const loadMenus = async () => {
+  try {
+    menus.value = getAllSystemMenus()
+  } catch (error) {
+    console.error('加载菜单失败:', error)
+  }
+}
+
+onMounted(() => {
+  loadMenus()
+})
 </script>
 
 <style scoped>

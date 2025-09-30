@@ -312,5 +312,6 @@ export const toggleMenuStatus = (id: number, isActive: boolean): Promise<void> =
 
 // 获取可见菜单（用于侧边栏显示）
 export const getVisibleMenus = (): Menu[] => {
-  return getAllSystemMenus().filter(menu => menu.isVisible && menu.isActive)
+  const allMenus = getAllSystemMenus()
+  return allMenus
 }

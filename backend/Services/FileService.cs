@@ -12,7 +12,6 @@ public class FileService : IFileService
     private readonly CmsDbContext _context;
     private readonly IWebHostEnvironment _environment;
     private readonly IConfiguration _configuration;
-
     public FileService(CmsDbContext context, IWebHostEnvironment environment, IConfiguration configuration)
     {
         _context = context;
@@ -91,7 +90,7 @@ public class FileService : IFileService
 
             return new UploadResponse
             {
-                Url = existingDto.FileUrl,
+                Url = $"/{existingFile.FilePath}",
                 FileName = existingFile.FileName,
                 FileSize = existingFile.FileSize,
                 Width = existingFile.Width,
@@ -160,7 +159,7 @@ public class FileService : IFileService
 
         return new UploadResponse
         {
-            Url = fileDto.FileUrl,
+            Url = $"/{uploadedFile.FilePath}",
             FileName = uploadedFile.FileName,
             FileSize = uploadedFile.FileSize,
             Width = uploadedFile.Width,

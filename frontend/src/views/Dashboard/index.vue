@@ -3,6 +3,7 @@
     <div class="dashboard-header">
       <h1>仪表盘</h1>
       <p>欢迎回来，{{ userInfo?.username }}！</p>
+      <el-button type="info" size="small" @click="debugPermissions">调试权限信息</el-button>
     </div>
     
     <div class="stats-grid">
@@ -84,6 +85,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useUserStore } from '@/stores/user'
+import { debugUserPermissions } from '@/utils/permission'
 import { User, Document, ShoppingBag, FolderOpened } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
 
@@ -128,6 +130,11 @@ const loadDashboardData = async () => {
   } catch (error) {
     console.error('加载仪表盘数据失败:', error)
   }
+}
+
+// 调试权限信息
+const debugPermissions = () => {
+  debugUserPermissions()
 }
 
 onMounted(() => {

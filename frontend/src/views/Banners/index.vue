@@ -25,9 +25,9 @@
         </el-table-column>
         <el-table-column prop="title" label="标题" min-width="200" />
         <el-table-column prop="description" label="描述" min-width="200" />
-        <el-table-column prop="link" label="链接" min-width="200">
+        <el-table-column prop="linkUrl" label="链接" min-width="200">
           <template #default="{ row }">
-            <el-link :href="row.link" target="_blank" v-if="row.link">{{ row.link }}</el-link>
+            <el-link :href="row.linkUrl" target="_blank" v-if="row.linkUrl">{{ row.linkUrl }}</el-link>
             <span v-else>-</span>
           </template>
         </el-table-column>
@@ -71,7 +71,7 @@
             action="#"
             :show-file-list="false"
             :before-upload="beforeUpload"
-            :on-success="handleUploadSuccess"
+            :http-request="handleUpload"
           >
             <img v-if="bannerForm.imageUrl" :src="bannerForm.imageUrl" class="banner-image" />
             <el-icon v-else class="banner-uploader-icon"><Plus /></el-icon>
@@ -90,7 +90,7 @@
           />
         </el-form-item>
         <el-form-item label="链接">
-          <el-input v-model="bannerForm.link" placeholder="请输入跳转链接（可选）" />
+          <el-input v-model="bannerForm.linkUrl" placeholder="请输入跳转链接（可选）" />
         </el-form-item>
         <el-form-item label="排序" prop="sortOrder">
           <el-input-number
@@ -124,61 +124,29 @@ import { ref, onMounted, reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
-
-interface Banner {
-  id: number
-  title: string
-  description: string
-  imageUrl: string
-  link: string
-  sortOrder: number
-  isActive: boolean
-  createdAt: string
-}
+import { 
+  getBanners, 
+  createBanner, 
+  updateBanner, 
+  deleteBanner as deleteBannerApi, 
+  toggleBannerStatus,
+  type Banner, 
+  type CreateBannerRequest 
+} from '@/api/banners'
+import { uploadImage } from '@/api/upload'
 
 const loading = ref(false)
 const saving = ref(false)
-const banners = ref<Banner[]>([
-  {
-    id: 1,
-    title: '欢迎使用CMS管理系统',
-    description: '功能完善的内容管理系统',
-    imageUrl: 'https://via.placeholder.com/1200x400/409EFF/FFFFFF?text=Banner+1',
-    link: '',
-    sortOrder: 1,
-    isActive: true,
-    createdAt: '2024-01-15T10:00:00Z'
-  },
-  {
-    id: 2,
-    title: '优质产品推荐',
-    description: '发现更多精选产品',
-    imageUrl: 'https://via.placeholder.com/1200x400/67C23A/FFFFFF?text=Banner+2',
-    link: '/products',
-    sortOrder: 2,
-    isActive: true,
-    createdAt: '2024-01-14T10:00:00Z'
-  },
-  {
-    id: 3,
-    title: '最新文章',
-    description: '查看最新发布的文章内容',
-    imageUrl: 'https://via.placeholder.com/1200x400/E6A23C/FFFFFF?text=Banner+3',
-    link: '/articles',
-    sortOrder: 3,
-    isActive: false,
-    createdAt: '2024-01-13T10:00:00Z'
-  }
-])
+const banners = ref<Banner[]>([])
 
 const dialogVisible = ref(false)
 const editingBanner = ref<Banner | null>(null)
 const formRef = ref()
-const bannerForm = reactive({
+const bannerForm = reactive<CreateBannerRequest>({
   title: '',
   description: '',
   imageUrl: '',
-  link: '',
+  linkUrl: '',
   sortOrder: 0,
   isActive: true
 })
@@ -202,9 +170,10 @@ const formatDate = (date: string) => {
 const loadBanners = async () => {
   loading.value = true
   try {
-    // 这里应该调用API获取轮播图数据
-    // banners.value = await getBanners()
+    const result = await getBanners()
+    banners.value = result.items
   } catch (error) {
+    console.error('加载轮播图列表失败:', error)
     ElMessage.error('加载轮播图列表失败')
   } finally {
     loading.value = false
@@ -220,9 +189,9 @@ const showCreateDialog = () => {
 const showEditDialog = (banner: Banner) => {
   editingBanner.value = banner
   bannerForm.title = banner.title
-  bannerForm.description = banner.description
+  bannerForm.description = banner.description || ''
   bannerForm.imageUrl = banner.imageUrl
-  bannerForm.link = banner.link
+  bannerForm.linkUrl = banner.linkUrl || ''
   bannerForm.sortOrder = banner.sortOrder
   bannerForm.isActive = banner.isActive
   dialogVisible.value = true
@@ -232,7 +201,7 @@ const resetForm = () => {
   bannerForm.title = ''
   bannerForm.description = ''
   bannerForm.imageUrl = ''
-  bannerForm.link = ''
+  bannerForm.linkUrl = ''
   bannerForm.sortOrder = 0
   bannerForm.isActive = true
   if (formRef.value) {
@@ -255,10 +224,15 @@ const beforeUpload = (file: File) => {
   return true
 }
 
-const handleUploadSuccess = (response: any) => {
-  // 这里应该处理上传成功的回调
-  // bannerForm.imageUrl = response.url
-  ElMessage.success('图片上传成功')
+const handleUpload = async (options: any) => {
+  try {
+    const response = await uploadImage(options.file)
+    bannerForm.imageUrl = response.url
+    ElMessage.success('图片上传成功')
+  } catch (error) {
+    console.error('图片上传失败:', error)
+    ElMessage.error('图片上传失败')
+  }
 }
 
 const saveBanner = async () => {
@@ -269,16 +243,17 @@ const saveBanner = async () => {
     saving.value = true
     
     if (editingBanner.value) {
-      // await updateBanner(editingBanner.value.id, bannerForm)
+      await updateBanner(editingBanner.value.id, bannerForm)
       ElMessage.success('更新轮播图成功')
     } else {
-      // await createBanner(bannerForm)
+      await createBanner(bannerForm)
       ElMessage.success('创建轮播图成功')
     }
     
     dialogVisible.value = false
-    loadBanners()
+    await loadBanners()
   } catch (error) {
+    console.error('保存轮播图失败:', error)
     ElMessage.error('保存轮播图失败')
   } finally {
     saving.value = false
@@ -297,9 +272,9 @@ const deleteBanner = async (banner: Banner) => {
       }
     )
     
-    // await deleteBannerApi(banner.id)
+    await deleteBannerApi(banner.id)
     ElMessage.success('删除轮播图成功')
-    loadBanners()
+    await loadBanners()
   } catch (error) {
     if (error !== 'cancel') {
       ElMessage.error('删除轮播图失败')

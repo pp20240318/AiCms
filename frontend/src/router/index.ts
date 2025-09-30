@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from '@/stores/user'
+import { checkRoutePermission } from '@/utils/permission'
+import { ElMessage } from 'element-plus'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -76,77 +78,92 @@ const router = createRouter({
         {
           path: 'dashboard',
           name: 'Dashboard',
-          component: () => import('@/views/Dashboard/index.vue')
+          component: () => import('@/views/Dashboard/index.vue'),
+          meta: { permission: 'dashboard:view' }
         },
         {
           path: 'users',
           name: 'Users',
-          component: () => import('@/views/Users/index.vue')
+          component: () => import('@/views/Users/index.vue'),
+          meta: { permission: 'users:view' }
         },
         {
           path: 'roles',
           name: 'Roles',
-          component: () => import('@/views/Roles/index.vue')
+          component: () => import('@/views/Roles/index.vue'),
+          meta: { permission: 'roles:view' }
         },
         {
           path: 'members',
           name: 'Members',
-          component: () => import('@/views/Members/index.vue')
+          component: () => import('@/views/Members/index.vue'),
+          meta: { permission: 'members:view' }
         },
         {
           path: 'articles',
           name: 'Articles',
-          component: () => import('@/views/Articles/index.vue')
+          component: () => import('@/views/Articles/index.vue'),
+          meta: { permission: 'articles:view' }
         },
         {
           path: 'articles/create',
           name: 'ArticleCreate',
-          component: () => import('@/views/Articles/Create.vue')
+          component: () => import('@/views/Articles/Create.vue'),
+          meta: { permission: 'articles:create' }
         },
         {
           path: 'articles/:id/edit',
           name: 'ArticleEdit',
-          component: () => import('@/views/Articles/Edit.vue')
+          component: () => import('@/views/Articles/Edit.vue'),
+          meta: { permission: 'articles:edit' }
         },
         {
           path: 'products',
           name: 'Products',
-          component: () => import('@/views/Products/index.vue')
+          component: () => import('@/views/Products/index.vue'),
+          meta: { permission: 'products:view' }
         },
         {
           path: 'article-categories',
           name: 'ArticleCategories',
-          component: () => import('@/views/ArticleCategories/index.vue')
+          component: () => import('@/views/ArticleCategories/index.vue'),
+          meta: { permission: 'categories:view' }
         },
         {
           path: 'product-categories',
           name: 'ProductCategories',
-          component: () => import('@/views/ProductCategories/index.vue')
+          component: () => import('@/views/ProductCategories/index.vue'),
+          meta: { permission: 'categories:view' }
         },
         {
           path: 'menus',
           name: 'Menus',
-          component: () => import('@/views/Menus/index.vue')
+          component: () => import('@/views/Menus/index.vue'),
+          meta: { permission: 'menus:view' }
         },
         {
           path: 'banners',
           name: 'Banners',
-          component: () => import('@/views/Banners/index.vue')
+          component: () => import('@/views/Banners/index.vue'),
+          meta: { permission: 'banners:view' }
         },
         {
           path: 'seo',
           name: 'SeoSettings',
-          component: () => import('@/views/Seo/index.vue')
+          component: () => import('@/views/Seo/index.vue'),
+          meta: { permission: 'seo:view' }
         },
         {
           path: 'contacts',
           name: 'Contacts',
-          component: () => import('@/views/Contacts/index.vue')
+          component: () => import('@/views/Contacts/index.vue'),
+          meta: { permission: 'contacts:view' }
         },
         {
           path: 'pages',
           name: 'Pages',
-          component: () => import('@/views/Pages/index.vue')
+          component: () => import('@/views/Pages/index.vue'),
+          meta: { permission: 'pages:view' }
         },
         {
           path: 'categories',
@@ -166,6 +183,13 @@ router.beforeEach((to, from, next) => {
     // 如果用户未登录，跳转到登录页
     if (!userStore.isLoggedIn) {
       next('/login')
+      return
+    }
+    
+    // 检查权限
+    if (!checkRoutePermission(to)) {
+      ElMessage.error('您没有访问该页面的权限')
+      next('/admin/dashboard') // 跳转到仪表盘
       return
     }
   } else {

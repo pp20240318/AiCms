@@ -22,7 +22,7 @@
         row-key="id"
         :tree-props="{ children: 'children' }"
       >
-        <el-table-column prop="name" label="菜单名称" min-width="200">
+        <el-table-column prop="name" label="菜单名称" min-width="250">
           <template #default="{ row }">
             <div class="menu-name">
               <el-icon v-if="row.icon" class="menu-icon">
@@ -69,7 +69,7 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="240" fixed="right">
+        <el-table-column label="操作" fixed="right">
           <template #default="{ row }">
             <el-button size="small" @click="showEditDialog(row)">
               <el-icon><Edit /></el-icon>
@@ -468,10 +468,22 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 8px;
+  white-space: nowrap;
+  flex-wrap: nowrap;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.menu-name span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
 }
 
 .menu-icon {
   color: #606266;
+  flex-shrink: 0;
 }
 
 .text-gray {
@@ -488,6 +500,13 @@ onMounted(() => {
 
 :deep(.el-table .el-table__cell) {
   padding: 12px 0;
+}
+
+:deep(.el-table .el-table__cell .cell) {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
 }
 
 :deep(.el-dialog) {
