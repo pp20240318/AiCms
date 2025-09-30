@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(tree:*)",
+      "Bash(mkdir:*)",
+      "Bash(cp:*)",
+      "Bash(npm install)",
+      "Bash(npm run build:*)",
+      "Bash(npm run build-only:*)",
+      "Bash(start.bat)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
