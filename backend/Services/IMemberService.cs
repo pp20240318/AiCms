@@ -6,6 +6,7 @@ namespace MyCms.Api.Services;
 public interface IMemberService
 {
     Task<IEnumerable<MemberListDto>> GetAllAsync();
+    Task<object> GetPagedAsync(int page, int pageSize, string? keyword, string? membershipType, string? status);
     Task<MemberDto?> GetByIdAsync(int id);
     Task<MemberDto?> GetByMemberCodeAsync(string memberCode);
     Task<MemberDto> CreateAsync(CreateMemberDto dto);

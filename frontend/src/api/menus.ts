@@ -54,7 +54,7 @@ export const getAllSystemMenus = (): Menu[] => {
       sortOrder: 1,
       isActive: true,
       isVisible: true,
-      permission: 'dashboard:view',
+      permission: 'dashboard.view',
       description: '系统概览和统计数据',
       createdAt: '2024-01-01T00:00:00Z'
     },
@@ -66,7 +66,7 @@ export const getAllSystemMenus = (): Menu[] => {
       sortOrder: 2,
       isActive: true,
       isVisible: true,
-      permission: 'content:view',
+      permission: 'content.view',
       description: '内容相关管理功能',
       createdAt: '2024-01-01T00:00:00Z',
       children: [
@@ -80,7 +80,7 @@ export const getAllSystemMenus = (): Menu[] => {
           sortOrder: 1,
           isActive: true,
           isVisible: true,
-          permission: 'articles:view',
+          permission: 'article.view',
           description: '管理网站文章内容',
           createdAt: '2024-01-01T00:00:00Z'
         },
@@ -94,7 +94,7 @@ export const getAllSystemMenus = (): Menu[] => {
           sortOrder: 2,
           isActive: true,
           isVisible: false, // 隐藏在菜单中，但路由存在
-          permission: 'articles:create',
+          permission: 'article.create',
           description: '创建新文章',
           createdAt: '2024-01-01T00:00:00Z'
         },
@@ -108,7 +108,7 @@ export const getAllSystemMenus = (): Menu[] => {
           sortOrder: 3,
           isActive: true,
           isVisible: true,
-          permission: 'article-categories:view',
+          permission: 'article.view',
           description: '管理文章分类',
           createdAt: '2024-01-01T00:00:00Z'
         },
@@ -122,7 +122,7 @@ export const getAllSystemMenus = (): Menu[] => {
           sortOrder: 4,
           isActive: true,
           isVisible: true,
-          permission: 'products:view',
+          permission: 'product.view',
           description: '管理产品信息',
           createdAt: '2024-01-01T00:00:00Z'
         },
@@ -136,7 +136,7 @@ export const getAllSystemMenus = (): Menu[] => {
           sortOrder: 5,
           isActive: true,
           isVisible: true,
-          permission: 'product-categories:view',
+          permission: 'product.view',
           description: '管理产品分类',
           createdAt: '2024-01-01T00:00:00Z'
         },
@@ -150,7 +150,7 @@ export const getAllSystemMenus = (): Menu[] => {
           sortOrder: 6,
           isActive: true,
           isVisible: true,
-          permission: 'pages:view',
+          permission: 'page.view',
           description: '管理静态页面',
           createdAt: '2024-01-01T00:00:00Z'
         },
@@ -164,7 +164,7 @@ export const getAllSystemMenus = (): Menu[] => {
           sortOrder: 7,
           isActive: true,
           isVisible: true,
-          permission: 'banners:view',
+          permission: 'banner.view',
           description: '管理首页轮播图',
           createdAt: '2024-01-01T00:00:00Z'
         }
@@ -178,7 +178,7 @@ export const getAllSystemMenus = (): Menu[] => {
       sortOrder: 3,
       isActive: true,
       isVisible: true,
-      permission: 'users:view',
+      permission: 'user.view',
       description: '用户和权限管理',
       createdAt: '2024-01-01T00:00:00Z',
       children: [
@@ -192,7 +192,7 @@ export const getAllSystemMenus = (): Menu[] => {
           sortOrder: 1,
           isActive: true,
           isVisible: true,
-          permission: 'admin-users:view',
+          permission: 'user.view',
           description: '管理系统管理员',
           createdAt: '2024-01-01T00:00:00Z'
         },
@@ -206,7 +206,7 @@ export const getAllSystemMenus = (): Menu[] => {
           sortOrder: 2,
           isActive: true,
           isVisible: true,
-          permission: 'roles:view',
+          permission: 'role.view',
           description: '管理用户角色和权限',
           createdAt: '2024-01-01T00:00:00Z'
         },
@@ -220,7 +220,7 @@ export const getAllSystemMenus = (): Menu[] => {
           sortOrder: 3,
           isActive: true,
           isVisible: true,
-          permission: 'members:view',
+          permission: 'member.view',
           description: '管理网站会员',
           createdAt: '2024-01-01T00:00:00Z'
         }
@@ -234,7 +234,7 @@ export const getAllSystemMenus = (): Menu[] => {
       sortOrder: 4,
       isActive: true,
       isVisible: true,
-      permission: 'system:view',
+      permission: 'system.manage',
       description: '系统配置和设置',
       createdAt: '2024-01-01T00:00:00Z',
       children: [
@@ -248,7 +248,7 @@ export const getAllSystemMenus = (): Menu[] => {
           sortOrder: 1,
           isActive: true,
           isVisible: true,
-          permission: 'menus:view',
+          permission: 'menu.view',
           description: '管理系统菜单结构',
           createdAt: '2024-01-01T00:00:00Z'
         },
@@ -262,7 +262,7 @@ export const getAllSystemMenus = (): Menu[] => {
           sortOrder: 2,
           isActive: true,
           isVisible: true,
-          permission: 'seo:view',
+          permission: 'seo.view',
           description: '搜索引擎优化设置',
           createdAt: '2024-01-01T00:00:00Z'
         },
@@ -276,7 +276,7 @@ export const getAllSystemMenus = (): Menu[] => {
           sortOrder: 3,
           isActive: true,
           isVisible: true,
-          permission: 'contacts:view',
+          permission: 'contact.view',
           description: '管理用户留言和反馈',
           createdAt: '2024-01-01T00:00:00Z'
         }

@@ -68,6 +68,37 @@ public static class DbInitializer
                     UpdatedAt TEXT NULL,
                     IsDeleted INTEGER NOT NULL DEFAULT 0
                 )");
+
+            await context.Database.ExecuteSqlRawAsync(@"
+                CREATE TABLE IF NOT EXISTS Members (
+                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    MemberCode TEXT NOT NULL UNIQUE,
+                    Name TEXT NOT NULL,
+                    Gender TEXT NULL,
+                    DateOfBirth TEXT NULL,
+                    IdNumber TEXT NULL,
+                    Phone TEXT NULL,
+                    Email TEXT NULL,
+                    Address TEXT NULL,
+                    MembershipType TEXT NOT NULL DEFAULT 'Regular',
+                    Status TEXT NOT NULL DEFAULT 'Active',
+                    JoinDate TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    ExpiryDate TEXT NULL,
+                    Notes TEXT NULL,
+                    Avatar TEXT NULL,
+                    Occupation TEXT NULL,
+                    Company TEXT NULL,
+                    EmergencyContact TEXT NULL,
+                    EmergencyPhone TEXT NULL,
+                    Balance DECIMAL(18,2) NULL DEFAULT 0,
+                    Points INTEGER NOT NULL DEFAULT 0,
+                    LastVisitDate TEXT NULL,
+                    ReferralCode TEXT NULL,
+                    ReferredBy TEXT NULL,
+                    CreatedAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    UpdatedAt TEXT NULL,
+                    IsDeleted INTEGER NOT NULL DEFAULT 0
+                )");
         }
         catch (Exception ex)
         {

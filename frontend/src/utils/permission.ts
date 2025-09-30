@@ -22,7 +22,7 @@ export const checkRoutePermission = (route: RouteLocationNormalized): boolean =>
   const userRoles = userStore.userInfo?.roles || []
   if (userRoles.length === 0) {
     // 没有角色数据时，只允许访问仪表盘
-    return route.path === '/admin/dashboard' || route.meta.permission === 'dashboard:view'
+    return route.path === '/admin/dashboard' || route.meta.permission === 'dashboard.view'
   }
   
   // 如果有管理员角色，允许所有访问
@@ -120,7 +120,7 @@ export const filterMenusByPermission = (menus: any[]): any[] => {
         
         // 如果没有角色数据，只显示仪表盘
         if (userRoles.length === 0) {
-          return menu.permission === 'dashboard:view'
+          return menu.permission === 'dashboard.view'
         }
         
         // 如果有管理员角色，显示所有菜单
@@ -198,7 +198,7 @@ const collectDefaultViewPermissions = (): string[] => {
   const traverse = (items: any[]) => {
     items.forEach(item => {
       if (item.permission) {
-        if (item.permission.includes(':view') && !permissions.includes(item.permission)) {
+        if (item.permission.includes('.view') && !permissions.includes(item.permission)) {
           permissions.push(item.permission)
         }
       }

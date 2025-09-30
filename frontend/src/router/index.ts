@@ -79,91 +79,91 @@ const router = createRouter({
           path: 'dashboard',
           name: 'Dashboard',
           component: () => import('@/views/Dashboard/index.vue'),
-          meta: { permission: 'dashboard:view' }
+          meta: { permission: 'dashboard.view' }
         },
         {
           path: 'users',
           name: 'Users',
           component: () => import('@/views/Users/index.vue'),
-          meta: { permission: 'users:view' }
+          meta: { permission: 'user.view' }
         },
         {
           path: 'roles',
           name: 'Roles',
           component: () => import('@/views/Roles/index.vue'),
-          meta: { permission: 'roles:view' }
+          meta: { permission: 'role.view' }
         },
         {
           path: 'members',
           name: 'Members',
           component: () => import('@/views/Members/index.vue'),
-          meta: { permission: 'members:view' }
+          meta: { permission: 'member.view' }
         },
         {
           path: 'articles',
           name: 'Articles',
           component: () => import('@/views/Articles/index.vue'),
-          meta: { permission: 'articles:view' }
+          meta: { permission: 'article.view' }
         },
         {
           path: 'articles/create',
           name: 'ArticleCreate',
           component: () => import('@/views/Articles/Create.vue'),
-          meta: { permission: 'articles:create' }
+          meta: { permission: 'article.create' }
         },
         {
           path: 'articles/:id/edit',
           name: 'ArticleEdit',
           component: () => import('@/views/Articles/Edit.vue'),
-          meta: { permission: 'articles:edit' }
+          meta: { permission: 'article.edit' }
         },
         {
           path: 'products',
           name: 'Products',
           component: () => import('@/views/Products/index.vue'),
-          meta: { permission: 'products:view' }
+          meta: { permission: 'product.view' }
         },
         {
           path: 'article-categories',
           name: 'ArticleCategories',
           component: () => import('@/views/ArticleCategories/index.vue'),
-          meta: { permission: 'categories:view' }
+          meta: { permission: 'article.view' }
         },
         {
           path: 'product-categories',
           name: 'ProductCategories',
           component: () => import('@/views/ProductCategories/index.vue'),
-          meta: { permission: 'categories:view' }
+          meta: { permission: 'product.view' }
         },
         {
           path: 'menus',
           name: 'Menus',
           component: () => import('@/views/Menus/index.vue'),
-          meta: { permission: 'menus:view' }
+          meta: { permission: 'menu.view' }
         },
         {
           path: 'banners',
           name: 'Banners',
           component: () => import('@/views/Banners/index.vue'),
-          meta: { permission: 'banners:view' }
+          meta: { permission: 'banner.view' }
         },
         {
           path: 'seo',
           name: 'SeoSettings',
           component: () => import('@/views/Seo/index.vue'),
-          meta: { permission: 'seo:view' }
+          meta: { permission: 'seo.view' }
         },
         {
           path: 'contacts',
           name: 'Contacts',
           component: () => import('@/views/Contacts/index.vue'),
-          meta: { permission: 'contacts:view' }
+          meta: { permission: 'contact.view' }
         },
         {
           path: 'pages',
           name: 'Pages',
           component: () => import('@/views/Pages/index.vue'),
-          meta: { permission: 'pages:view' }
+          meta: { permission: 'page.view' }
         },
         {
           path: 'categories',

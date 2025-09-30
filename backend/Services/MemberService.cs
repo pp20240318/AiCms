@@ -36,6 +36,63 @@ public class MemberService : IMemberService
             .ToListAsync();
     }
 
+    public async Task<object> GetPagedAsync(int page, int pageSize, string? keyword, string? membershipType, string? status)
+    {
+        var query = _context.Members.Where(m => !m.IsDeleted);
+
+        // 应用搜索条件
+        if (!string.IsNullOrEmpty(keyword))
+        {
+            query = query.Where(m =>
+                m.Name.Contains(keyword) ||
+                m.MemberCode.Contains(keyword) ||
+                (m.Phone != null && m.Phone.Contains(keyword)) ||
+                (m.Email != null && m.Email.Contains(keyword)));
+        }
+
+        if (!string.IsNullOrEmpty(membershipType))
+        {
+            query = query.Where(m => m.MembershipType == membershipType);
+        }
+
+        if (!string.IsNullOrEmpty(status))
+        {
+            query = query.Where(m => m.Status == status);
+        }
+
+        // 计算总数
+        var total = await query.CountAsync();
+
+        // 分页查询
+        var items = await query
+            .OrderByDescending(m => m.CreatedAt)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Select(m => new MemberListDto
+            {
+                Id = m.Id,
+                MemberCode = m.MemberCode,
+                Name = m.Name,
+                Phone = m.Phone,
+                Email = m.Email,
+                MembershipType = m.MembershipType,
+                Status = m.Status,
+                JoinDate = m.JoinDate,
+                ExpiryDate = m.ExpiryDate,
+                Balance = m.Balance,
+                Points = m.Points
+            })
+            .ToListAsync();
+
+        return new
+        {
+            items = items,
+            total = total,
+            page = page,
+            pageSize = pageSize
+        };
+    }
+
     public async Task<MemberDto?> GetByIdAsync(int id)
     {
         var member = await _context.Members

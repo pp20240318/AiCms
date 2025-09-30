@@ -18,10 +18,22 @@ public class MembersController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<MemberListDto>>> GetMembers()
+    public async Task<ActionResult<ApiResponse<object>>> GetMembers(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 20,
+        [FromQuery] string? keyword = null,
+        [FromQuery] string? membershipType = null,
+        [FromQuery] string? status = null)
     {
-        var members = await _memberService.GetAllAsync();
-        return Ok(members);
+        try
+        {
+            var result = await _memberService.GetPagedAsync(page, pageSize, keyword, membershipType, status);
+            return Ok(ApiResponse<object>.SuccessResult(result));
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ApiResponse<object>.ErrorResult(ex.Message));
+        }
     }
 
     [HttpGet("{id}")]
