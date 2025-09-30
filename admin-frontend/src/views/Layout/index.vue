@@ -3,6 +3,7 @@
     <Sidebar />
     <div class="main">
       <Header />
+      <TabBar />
       <el-main class="content">
         <router-view />
       </el-main>
@@ -14,16 +15,22 @@
 import { onMounted } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { useAppStore } from '@/stores/app'
+import { useTabsStore } from '@/stores/tabs'
 import Sidebar from '@/components/Layout/Sidebar.vue'
 import Header from '@/components/Layout/Header.vue'
+import TabBar from '@/components/Layout/TabBar.vue'
 
 const userStore = useUserStore()
 const appStore = useAppStore()
+const tabsStore = useTabsStore()
 
 onMounted(() => {
   // 初始化用户信息和主题
   userStore.initUserInfo()
   appStore.initTheme()
+
+  // 初始化或恢复tabs
+  tabsStore.restoreTabsFromStorage()
 })
 </script>
 
