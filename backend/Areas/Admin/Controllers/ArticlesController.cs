@@ -4,10 +4,12 @@ using MyCms.Api.DTOs;
 using MyCms.Api.Services;
 using System.Security.Claims;
 
-namespace MyCms.Api.Controllers;
+namespace MyCms.Api.Areas.Admin.Controllers;
 
+[Area("Admin")]
+[Route("api/admin/[controller]")]
 [ApiController]
-[Route("api/[controller]")]
+[Authorize]
 public class ArticlesController : ControllerBase
 {
     private readonly IArticleService _articleService;
@@ -17,6 +19,9 @@ public class ArticlesController : ControllerBase
         _articleService = articleService;
     }
 
+    /// <summary>
+    /// 获取所有文章（管理员）
+    /// </summary>
     [HttpGet]
     public async Task<ActionResult<ApiResponse<PagedResult<ArticleDto>>>> GetArticles(
         [FromQuery] int page = 1,
@@ -32,7 +37,7 @@ public class ArticlesController : ControllerBase
                 Page = page,
                 PageSize = pageSize,
                 Search = search,
-                Status = status,
+                Status = status, // 管理员可以看到所有状态的文章
                 CategoryId = categoryId
             };
 
@@ -45,6 +50,9 @@ public class ArticlesController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// 根据ID获取文章（管理员）
+    /// </summary>
     [HttpGet("{id}")]
     public async Task<ActionResult<ApiResponse<ArticleDto>>> GetArticle(int id)
     {
@@ -64,8 +72,10 @@ public class ArticlesController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// 创建文章（管理员）
+    /// </summary>
     [HttpPost]
-    [Authorize]
     public async Task<ActionResult<ApiResponse<ArticleDto>>> CreateArticle([FromBody] CreateArticleRequest request)
     {
         try
@@ -77,7 +87,7 @@ public class ArticlesController : ControllerBase
             }
 
             var article = await _articleService.CreateArticleAsync(request, authorId);
-            return CreatedAtAction(nameof(GetArticle), new { id = article.Id }, 
+            return CreatedAtAction(nameof(GetArticle), new { id = article.Id },
                 ApiResponse<ArticleDto>.SuccessResult(article, "文章创建成功"));
         }
         catch (Exception ex)
@@ -86,8 +96,10 @@ public class ArticlesController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// 更新文章（管理员）
+    /// </summary>
     [HttpPut("{id}")]
-    [Authorize]
     public async Task<ActionResult<ApiResponse<ArticleDto>>> UpdateArticle(int id, [FromBody] CreateArticleRequest request)
     {
         try
@@ -98,14 +110,13 @@ public class ArticlesController : ControllerBase
                 Title = request.Title,
                 Summary = request.Summary,
                 Content = request.Content,
-                CoverImage = request.CoverImage,
                 CategoryId = request.CategoryId,
                 IsPublished = request.IsPublished,
-                PublishedAt = request.PublishedAt,
-                SortOrder = request.SortOrder,
+                CoverImage = request.CoverImage,
                 SeoTitle = request.SeoTitle,
                 SeoDescription = request.SeoDescription,
-                SeoKeywords = request.SeoKeywords
+                SeoKeywords = request.SeoKeywords,
+                SortOrder = request.SortOrder
             };
 
             var article = await _articleService.UpdateArticleAsync(updateRequest);
@@ -122,8 +133,10 @@ public class ArticlesController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// 删除文章（管理员）
+    /// </summary>
     [HttpDelete("{id}")]
-    [Authorize]
     public async Task<ActionResult<ApiResponse<object>>> DeleteArticle(int id)
     {
         try
@@ -134,7 +147,7 @@ public class ArticlesController : ControllerBase
                 return NotFound(ApiResponse<object>.ErrorResult("文章不存在"));
             }
 
-            return Ok(ApiResponse.SuccessResult("文章删除成功"));
+            return Ok(ApiResponse<object>.SuccessResult(null, "文章删除成功"));
         }
         catch (Exception ex)
         {
@@ -142,43 +155,4 @@ public class ArticlesController : ControllerBase
         }
     }
 
-    [HttpPatch("{id}/publish")]
-    [Authorize]
-    public async Task<ActionResult<ApiResponse<object>>> PublishArticle(int id)
-    {
-        try
-        {
-            var success = await _articleService.PublishArticleAsync(id);
-            if (!success)
-            {
-                return NotFound(ApiResponse<object>.ErrorResult("文章不存在"));
-            }
-
-            return Ok(ApiResponse.SuccessResult("文章发布成功"));
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ApiResponse<object>.ErrorResult(ex.Message));
-        }
-    }
-
-    [HttpPatch("{id}/unpublish")]
-    [Authorize]
-    public async Task<ActionResult<ApiResponse<object>>> UnpublishArticle(int id)
-    {
-        try
-        {
-            var success = await _articleService.UnpublishArticleAsync(id);
-            if (!success)
-            {
-                return NotFound(ApiResponse<object>.ErrorResult("文章不存在"));
-            }
-
-            return Ok(ApiResponse.SuccessResult("文章取消发布成功"));
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ApiResponse<object>.ErrorResult(ex.Message));
-        }
-    }
 }

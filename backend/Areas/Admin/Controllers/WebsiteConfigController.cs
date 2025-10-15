@@ -8,7 +8,9 @@ using MyCms.Api.Models;
 namespace MyCms.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Area("Admin")]
+[Route("api/admin/[controller]")]
+[Authorize]
     public class WebsiteConfigController : ControllerBase
     {
         private readonly CmsDbContext _context;

@@ -35,30 +35,30 @@ export interface UpdateProductCategoryData {
 
 // 获取产品分类列表
 export const getProductCategories = (includeInactive = false): Promise<ProductCategory[]> => {
-  return request.get(`/productcategories?includeInactive=${includeInactive}`)
+  return request.get(`/admin/productcategories?includeInactive=${includeInactive}`)
 }
 
 // 获取产品分类树
 export const getProductCategoriesTree = (): Promise<ProductCategory[]> => {
-  return request.get('/productcategories/tree')
+  return request.get('/admin/productcategories/tree')
 }
 
 // 获取产品分类详情
 export const getProductCategoryById = (id: number): Promise<ProductCategory> => {
-  return request.get(`/productcategories/${id}`)
+  return request.get(`/admin/productcategories/${id}`)
 }
 
 // 创建产品分类
 export const createProductCategory = (data: CreateProductCategoryData): Promise<ProductCategory> => {
-  return request.post('/productcategories', data)
+  return request.post('/admin/productcategories', data)
 }
 
 // 更新产品分类
 export const updateProductCategory = (id: number, data: UpdateProductCategoryData): Promise<ProductCategory> => {
-  return request.put(`/productcategories/${id}`, data)
+  return request.put(`/admin/productcategories/${id}`, data)
 }
 
 // 删除产品分类
 export const deleteProductCategory = (id: number): Promise<void> => {
-  return request.delete(`/productcategories/${id}`)
+  return request.delete(`/admin/productcategories/${id}`)
 }

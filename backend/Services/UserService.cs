@@ -192,4 +192,107 @@ public class UserService : IUserService
             TotalPages = (int)Math.Ceiling((double)totalCount / request.PageSize)
         };
     }
+
+    public async Task<UserDto?> GetUserByIdAsync(int id)
+    {
+        var user = await _context.Users
+            .Where(u => u.Id == id && !u.IsDeleted)
+            .FirstOrDefaultAsync();
+
+        if (user == null)
+            return null;
+
+        var roles = await GetUserRolesAsync(user.Id);
+        return new UserDto
+        {
+            Id = user.Id,
+            Username = user.Username,
+            Email = user.Email,
+            RealName = user.RealName,
+            Phone = user.Phone,
+            IsActive = user.IsActive,
+            LastLoginAt = user.LastLoginAt,
+            CreatedAt = user.CreatedAt,
+            Roles = roles
+        };
+    }
+
+    public async Task<UserDto> CreateUserAsync(CreateUserRequest request)
+    {
+        var user = new User
+        {
+            Username = request.Username,
+            Email = request.Email,
+            RealName = request.RealName,
+            Phone = request.Phone,
+            IsActive = request.IsActive,
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
+            CreatedAt = DateTime.UtcNow
+        };
+
+        _context.Users.Add(user);
+        await _context.SaveChangesAsync();
+
+        var roles = await GetUserRolesAsync(user.Id);
+        return new UserDto
+        {
+            Id = user.Id,
+            Username = user.Username,
+            Email = user.Email,
+            RealName = user.RealName,
+            Phone = user.Phone,
+            IsActive = user.IsActive,
+            LastLoginAt = user.LastLoginAt,
+            CreatedAt = user.CreatedAt,
+            Roles = roles
+        };
+    }
+
+    public async Task<UserDto?> UpdateUserAsync(int id, UpdateUserRequest request)
+    {
+        var user = await _context.Users
+            .Where(u => u.Id == id && !u.IsDeleted)
+            .FirstOrDefaultAsync();
+
+        if (user == null)
+            return null;
+
+        user.Username = request.Username;
+        user.Email = request.Email;
+        user.RealName = request.RealName;
+        user.Phone = request.Phone;
+        user.IsActive = request.IsActive;
+        user.UpdatedAt = DateTime.UtcNow;
+
+        await _context.SaveChangesAsync();
+
+        var roles = await GetUserRolesAsync(user.Id);
+        return new UserDto
+        {
+            Id = user.Id,
+            Username = user.Username,
+            Email = user.Email,
+            RealName = user.RealName,
+            Phone = user.Phone,
+            IsActive = user.IsActive,
+            LastLoginAt = user.LastLoginAt,
+            CreatedAt = user.CreatedAt,
+            Roles = roles
+        };
+    }
+
+    public async Task<bool> DeleteUserAsync(int id)
+    {
+        var user = await _context.Users
+            .Where(u => u.Id == id && !u.IsDeleted)
+            .FirstOrDefaultAsync();
+
+        if (user == null)
+            return false;
+
+        user.IsDeleted = true;
+        user.UpdatedAt = DateTime.UtcNow;
+        await _context.SaveChangesAsync();
+        return true;
+    }
 }

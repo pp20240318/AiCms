@@ -9,7 +9,9 @@ namespace MyCms.Api.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("api/[controller]")]
+    [Area("Admin")]
+[Route("api/admin/[controller]")]
+[Authorize]
     public class SeoSettingsController : ControllerBase
     {
         private readonly CmsDbContext _context;

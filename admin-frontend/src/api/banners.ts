@@ -48,37 +48,37 @@ export interface PagedResult<T> {
 
 // 获取轮播图列表
 export const getBanners = (params?: BannerListRequest): Promise<PagedResult<Banner>> => {
-  return request.get('/banners', { params })
+  return request.get('/admin/banners', { params })
 }
 
 // 获取活跃的轮播图
 export const getActiveBanners = (): Promise<Banner[]> => {
-  return request.get('/banners/active')
+  return request.get('/admin/banners/active')
 }
 
 // 获取单个轮播图
 export const getBanner = (id: number): Promise<Banner> => {
-  return request.get(`/banners/${id}`)
+  return request.get(`/admin/banners/${id}`)
 }
 
 // 创建轮播图
 export const createBanner = (data: CreateBannerRequest): Promise<Banner> => {
-  return request.post('/banners', data)
+  return request.post('/admin/banners', data)
 }
 
 // 更新轮播图
 export const updateBanner = (id: number, data: CreateBannerRequest): Promise<Banner> => {
-  return request.put(`/banners/${id}`, data)
+  return request.put(`/admin/banners/${id}`, data)
 }
 
 // 删除轮播图
 export const deleteBanner = (id: number): Promise<void> => {
-  return request.delete(`/banners/${id}`)
+  return request.delete(`/admin/banners/${id}`)
 }
 
 // 切换轮播图状态
 export const toggleBannerStatus = (id: number): Promise<void> => {
-  return request.patch(`/banners/${id}/toggle-active`)
+  return request.patch(`/admin/banners/${id}/toggle-active`)
 }
 
 

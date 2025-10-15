@@ -10,7 +10,7 @@ export interface UploadResponse {
 
 // 上传文件
 export const uploadFile = (formData: FormData): Promise<UploadResponse> => {
-  return request.post('/files/upload', formData, {
+  return request.post('/admin/files/upload', formData, {
     headers: {
       'Content-Type': 'multipart/form-data'
     }
@@ -26,6 +26,6 @@ export const uploadImage = (file: File): Promise<UploadResponse> => {
 
 // 删除文件
 export const deleteFile = (filename: string): Promise<void> => {
-  return request.delete(`/files/${filename}`)
+  return request.delete(`/admin/files/${filename}`)
 }
 

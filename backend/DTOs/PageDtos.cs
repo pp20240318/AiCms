@@ -22,6 +22,8 @@ namespace MyCms.Api.DTOs
         public DateTime? PublishedAt { get; set; }
         public int CreatedById { get; set; }
         public int? UpdatedById { get; set; }
+        public int AuthorId { get; set; }
+        public string? AuthorName { get; set; }
         public int ViewCount { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }

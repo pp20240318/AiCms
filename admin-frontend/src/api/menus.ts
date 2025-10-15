@@ -287,27 +287,27 @@ export const getAllSystemMenus = (): Menu[] => {
 
 // 创建菜单
 export const createMenu = (data: CreateMenuDto): Promise<Menu> => {
-  return request.post('/menus', data)
+  return request.post('/admin/menus', data)
 }
 
 // 更新菜单
 export const updateMenu = (id: number, data: UpdateMenuDto): Promise<Menu> => {
-  return request.put(`/menus/${id}`, data)
+  return request.put(`/admin/menus/${id}`, data)
 }
 
 // 删除菜单
 export const deleteMenu = (id: number): Promise<void> => {
-  return request.delete(`/menus/${id}`)
+  return request.delete(`/admin/menus/${id}`)
 }
 
 // 更新菜单排序
 export const updateMenuSort = (menuIds: number[]): Promise<void> => {
-  return request.post('/menus/sort', { menuIds })
+  return request.post('/admin/menus/sort', { menuIds })
 }
 
 // 切换菜单状态
 export const toggleMenuStatus = (id: number, isActive: boolean): Promise<void> => {
-  return request.patch(`/menus/${id}/status`, { isActive })
+  return request.patch(`/admin/menus/${id}/status`, { isActive })
 }
 
 // 获取可见菜单（用于侧边栏显示）

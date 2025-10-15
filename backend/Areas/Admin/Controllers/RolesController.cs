@@ -3,10 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using MyCms.Api.DTOs;
 using MyCms.Api.Services;
 
-namespace MyCms.Api.Controllers;
+namespace MyCms.Api.Areas.Admin.Controllers;
 
+[Area("Admin")]
+[Route("api/admin/[controller]")]
 [ApiController]
-[Route("api/[controller]")]
 [Authorize]
 public class RolesController : ControllerBase
 {

@@ -90,7 +90,7 @@ export const getMembers = (params?: MemberQuery): Promise<{
   page: number
   pageSize: number
 }> => {
-  return request.get('/members', { params })
+  return request.get('/admin/members', { params })
 }
 
 // 搜索会员
@@ -99,27 +99,27 @@ export const searchMembers = (params: {
   membershipType?: string
   status?: string
 }): Promise<Member[]> => {
-  return request.get('/members/search', { params })
+  return request.get('/admin/members/search', { params })
 }
 
 // 获取会员详情
 export const getMemberById = (id: number): Promise<Member> => {
-  return request.get(`/members/${id}`)
+  return request.get(`/admin/members/${id}`)
 }
 
 // 根据会员编号获取会员
 export const getMemberByCode = (memberCode: string): Promise<Member> => {
-  return request.get(`/members/code/${memberCode}`)
+  return request.get(`/admin/members/code/${memberCode}`)
 }
 
 // 创建会员
 export const createMember = (data: CreateMemberData): Promise<Member> => {
-  return request.post('/members', data)
+  return request.post('/admin/members', data)
 }
 
 // 更新会员
 export const updateMember = (id: number, data: UpdateMemberData): Promise<Member> => {
-  return request.put(`/members/${id}`, data)
+  return request.put(`/admin/members/${id}`, data)
 }
 
 // 删除会员
@@ -129,12 +129,12 @@ export const deleteMember = (id: number): Promise<void> => {
 
 // 生成会员编号
 export const generateMemberCode = (): Promise<{ memberCode: string }> => {
-  return request.get('/members/generate-code')
+  return request.get('/admin/members/generate-code')
 }
 
 // 更新余额
 export const updateBalance = (id: number, amount: number): Promise<void> => {
-  return request.post(`/members/${id}/balance`, amount, {
+  return request.post(`/admin/members/${id}/balance`, amount, {
     headers: {
       'Content-Type': 'application/json'
     }
@@ -143,7 +143,7 @@ export const updateBalance = (id: number, amount: number): Promise<void> => {
 
 // 更新积分
 export const updatePoints = (id: number, points: number): Promise<void> => {
-  return request.post(`/members/${id}/points`, points, {
+  return request.post(`/admin/members/${id}/points`, points, {
     headers: {
       'Content-Type': 'application/json'
     }
@@ -152,5 +152,5 @@ export const updatePoints = (id: number, points: number): Promise<void> => {
 
 // 更新访问记录
 export const updateLastVisit = (id: number): Promise<void> => {
-  return request.post(`/members/${id}/visit`)
+  return request.post(`/admin/members/${id}/visit`)
 }

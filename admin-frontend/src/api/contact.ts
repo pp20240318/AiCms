@@ -69,30 +69,30 @@ export interface ContactStatistics {
 
 // 提交联系我们表单（公开接口）
 export const submitContact = (data: CreateContactDto) => {
-  return request.post<Contact>('/contacts', data)
+  return request.post<Contact>('/public/contact', data)
 }
 
 // 获取联系消息列表（管理员）
 export const getContacts = (params?: ContactQueryDto) => {
-  return request.get<ContactListResponse>('/contacts', { params })
+  return request.get<ContactListResponse>('/admin/contacts', { params })
 }
 
 // 获取指定联系消息
 export const getContact = (id: number) => {
-  return request.get<Contact>(`/contacts/${id}`)
+  return request.get<Contact>(`/admin/contacts/${id}`)
 }
 
 // 更新联系消息状态和回复
 export const updateContactStatus = (id: number, data: UpdateContactStatusDto) => {
-  return request.put(`/contacts/${id}/status`, data)
+  return request.put(`/admin/contacts/${id}/status`, data)
 }
 
 // 删除联系消息
 export const deleteContact = (id: number) => {
-  return request.delete(`/contacts/${id}`)
+  return request.delete(`/admin/contacts/${id}`)
 }
 
 // 获取联系消息统计
 export const getContactStatistics = () => {
-  return request.get<ContactStatistics>('/contacts/statistics')
+  return request.get<ContactStatistics>('/admin/contacts/statistics')
 }

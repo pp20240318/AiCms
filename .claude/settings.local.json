@@ -9,7 +9,19 @@
       "Bash(npm run build-only:*)",
       "Bash(start.bat)",
       "Bash(npm run type-check:*)",
-      "Bash(npm run dev:*)"
+      "Bash(npm run dev:*)",
+      "Bash(find:*)",
+      "Bash(dotnet build)",
+      "Bash(for file in ArticleCategoriesController.cs RolesController.cs FilesController.cs)",
+      "Bash(do)",
+      "Bash(if [ -f \"$file\" ])",
+      "Bash(then)",
+      "Bash(fi)",
+      "Bash(done)",
+      "Bash(for file in MembersController.cs PermissionsController.cs ProductCategoriesController.cs ProductsController.cs SeoSettingsController.cs WebsiteConfigController.cs)",
+      "Bash(grep:*)",
+      "Bash(rm:*)",
+      "Bash(dotnet build:*)"
     ],
     "deny": [],
     "ask": []

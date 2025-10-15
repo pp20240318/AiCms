@@ -59,25 +59,25 @@ export const getProducts = (params?: ProductsQuery): Promise<{
   page: number
   pageSize: number
 }> => {
-  return request.get('/products', { params })
+  return request.get('/admin/products', { params })
 }
 
 // 获取产品详情
 export const getProductById = (id: number): Promise<Product> => {
-  return request.get(`/products/${id}`)
+  return request.get(`/admin/products/${id}`)
 }
 
 // 创建产品
 export const createProduct = (data: CreateProductData): Promise<Product> => {
-  return request.post('/products', data)
+  return request.post('/admin/products', data)
 }
 
 // 更新产品
 export const updateProduct = (id: number, data: UpdateProductData): Promise<Product> => {
-  return request.put(`/products/${id}`, data)
+  return request.put(`/admin/products/${id}`, data)
 }
 
 // 删除产品
 export const deleteProduct = (id: number): Promise<void> => {
-  return request.delete(`/products/${id}`)
+  return request.delete(`/admin/products/${id}`)
 }

@@ -83,6 +83,18 @@ app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 
+// 配置Areas路由
+app.MapControllerRoute(
+    name: "admin-area",
+    pattern: "api/admin/{controller}/{action=Index}/{id?}",
+    defaults: new { area = "Admin" });
+
+app.MapControllerRoute(
+    name: "public-area",
+    pattern: "api/public/{controller}/{action=Index}/{id?}",
+    defaults: new { area = "Public" });
+
+// 默认路由（向后兼容）
 app.MapControllers();
 
 // Initialize database on startup

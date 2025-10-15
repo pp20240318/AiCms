@@ -15,4 +15,8 @@ public interface IUserService
     Task<bool> DeleteAsync(int id);
     Task<bool> ChangePasswordAsync(int userId, string currentPassword, string newPassword);
     Task<PagedResult<UserDto>> GetUsersAsync(UserListRequest request);
+    Task<UserDto?> GetUserByIdAsync(int id);
+    Task<UserDto> CreateUserAsync(CreateUserRequest request);
+    Task<UserDto?> UpdateUserAsync(int id, UpdateUserRequest request);
+    Task<bool> DeleteUserAsync(int id);
 }

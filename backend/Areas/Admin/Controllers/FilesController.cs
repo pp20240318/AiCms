@@ -4,10 +4,13 @@ using MyCms.Api.DTOs;
 using MyCms.Api.Services;
 using System.Security.Claims;
 
-namespace MyCms.Api.Controllers;
+namespace MyCms.Api.Areas.Admin.Controllers;
 
+[Area("Admin")]
+[Route("api/admin/[controller]")]
 [ApiController]
-[Route("api/[controller]")]
+[Authorize]
+
 public class FilesController : ControllerBase
 {
     private readonly IFileService _fileService;

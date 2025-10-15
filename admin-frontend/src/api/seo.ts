@@ -40,30 +40,30 @@ export interface UpdateSeoSettingDto {
 
 // 获取所有SEO设置
 export const getSeoSettings = () => {
-  return request.get<SeoSetting[]>('/seosettings')
+  return request.get<SeoSetting[]>('/admin/seosettings')
 }
 
 // 根据路径获取SEO设置（公开接口）
 export const getSeoSettingByPath = (pagePath: string) => {
-  return request.get<SeoSetting>(`/seosettings/by-path/${encodeURIComponent(pagePath)}`)
+  return request.get<SeoSetting>(`/public/seosettings/by-path/${encodeURIComponent(pagePath)}`)
 }
 
 // 获取指定SEO设置
 export const getSeoSetting = (id: number) => {
-  return request.get<SeoSetting>(`/seosettings/${id}`)
+  return request.get<SeoSetting>(`/admin/seosettings/${id}`)
 }
 
 // 创建SEO设置
 export const createSeoSetting = (data: CreateSeoSettingDto) => {
-  return request.post<SeoSetting>('/seosettings', data)
+  return request.post<SeoSetting>('/admin/seosettings', data)
 }
 
 // 更新SEO设置
 export const updateSeoSetting = (id: number, data: UpdateSeoSettingDto) => {
-  return request.put(`/seosettings/${id}`, data)
+  return request.put(`/admin/seosettings/${id}`, data)
 }
 
 // 删除SEO设置
 export const deleteSeoSetting = (id: number) => {
-  return request.delete(`/seosettings/${id}`)
+  return request.delete(`/admin/seosettings/${id}`)
 }

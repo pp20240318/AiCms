@@ -12,4 +12,5 @@ public interface IArticleService
     Task<bool> DeleteArticleAsync(int id);
     Task<bool> PublishArticleAsync(int id);
     Task<bool> UnpublishArticleAsync(int id);
+    Task IncrementViewCountAsync(int id);
 }

@@ -195,4 +195,18 @@ public class ArticleService : IArticleService
         await _context.SaveChangesAsync();
         return true;
     }
+
+    public async Task IncrementViewCountAsync(int id)
+    {
+        var article = await _context.Articles
+            .Where(a => a.Id == id && !a.IsDeleted)
+            .FirstOrDefaultAsync();
+
+        if (article != null)
+        {
+            article.ViewCount++;
+            article.UpdatedAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+        }
+    }
 }

@@ -128,7 +128,7 @@ export const getArticles = async (params?: ArticlesQuery): Promise<{
   page: number
   pageSize: number
 }> => {
-  const response = await request.get('/articles', { params })
+  const response = await request.get('/admin/articles', { params })
   return {
     items: response.items.map(transformBackendArticle),
     total: response.totalCount,
@@ -139,21 +139,21 @@ export const getArticles = async (params?: ArticlesQuery): Promise<{
 
 // 获取文章详情
 export const getArticleById = async (id: number): Promise<Article> => {
-  const backendArticle: BackendArticle = await request.get(`/articles/${id}`)
+  const backendArticle: BackendArticle = await request.get(`/admin/articles/${id}`)
   return transformBackendArticle(backendArticle)
 }
 
 // 创建文章
 export const createArticle = async (data: CreateArticleDto): Promise<Article> => {
   const backendRequest = transformToBackendRequest(data)
-  const backendArticle: BackendArticle = await request.post('/articles', backendRequest)
+  const backendArticle: BackendArticle = await request.post('/admin/articles', backendRequest)
   return transformBackendArticle(backendArticle)
 }
 
 // 更新文章
 export const updateArticle = async (id: number, data: UpdateArticleDto): Promise<Article> => {
   const backendRequest = transformToBackendRequest(data)
-  const backendArticle: BackendArticle = await request.put(`/articles/${id}`, backendRequest)
+  const backendArticle: BackendArticle = await request.put(`/admin/articles/${id}`, backendRequest)
   return transformBackendArticle(backendArticle)
 }
 
@@ -164,20 +164,20 @@ export const getArticle = (id: number): Promise<Article> => {
 
 // 获取文章分类列表
 export const getCategories = (): Promise<ArticleCategory[]> => {
-  return request.get('/categories')
+  return request.get('/admin/articlecategories')
 }
 
 // 删除文章
 export const deleteArticle = (id: number): Promise<void> => {
-  return request.delete(`/articles/${id}`)
+  return request.delete(`/admin/articles/${id}`)
 }
 
 // 发布文章
 export const publishArticle = async (id: number): Promise<void> => {
-  await request.patch(`/articles/${id}/publish`)
+  await request.patch(`/admin/articles/${id}/publish`)
 }
 
 // 取消发布文章（归档）
 export const archiveArticle = async (id: number): Promise<void> => {
-  await request.patch(`/articles/${id}/unpublish`)
+  await request.patch(`/admin/articles/${id}/unpublish`)
 }
